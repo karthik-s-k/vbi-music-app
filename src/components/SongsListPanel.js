@@ -1,4 +1,7 @@
 import React from 'react';
+import SongInfo from "./SongInfo";
+
+import Container from 'react-bootstrap/Container';
 
 class SongsListPanel extends React.Component {
     constructor(props) {
@@ -7,12 +10,27 @@ class SongsListPanel extends React.Component {
             songName: '' 
         };
       }
-    
+
     render() {
         return (
-            <div>
-                This is Songs List Panel
-            </div>
+            <Container>
+                {
+                    this.props.filteredSearchResult && this.props.filteredSearchResult.length < 1 && 
+                    this.props.photosList && this.props.songList && this.props.songList.map((song, index) => {                  
+                        return (
+                            <SongInfo key={song.id} song={song} photosList={this.props.photosList} showThumbnails={this.props.showThumbnails} />
+                            );
+                        })
+                }
+                {
+                    this.props.filteredSearchResult && this.props.filteredSearchResult.length > 0 && 
+                    this.props.photosList && this.props.filteredSearchResult && this.props.filteredSearchResult.map((song, index) => {                  
+                        return (
+                            <SongInfo key={song.id} song={song} photosList={this.props.photosList} showThumbnails={this.props.showThumbnails} />
+                            );
+                        })
+                }
+            </Container>
             );
         }
 }
