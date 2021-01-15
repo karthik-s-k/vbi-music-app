@@ -7,26 +7,29 @@ import ButtonGroup from 'react-bootstrap/ButtonGroup'
 import Button from 'react-bootstrap/Button';
 
 class SongInfo extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            songName: '' 
-        };
-      }
-
     render() {
-
-        let photos = this.props.photosList.filter(photos => photos.id === this.props.song.id);
-
+        let photos = {};
         let songDetails = {
-            "songId": this.props.song.id,
-            "albumId": photos[0].albumId,
-            "songTitle": this.props.song.title,
-            "albumTitle": photos[0].title,
-            "albumURL": photos[0].url,
-            "thumbURL": photos[0].thumbnailUrl,
-            "userId": this.props.song.userId
+            "songId": "",
+            "albumId": "",
+            "songTitle": "",
+            "albumTitle": "",
+            "albumURL": "",
+            "thumbURL": "",
+            "userId": ""
         };
+
+        if (this.props.song && this.props.photosList) {
+            photos = this.props.photosList.filter(photos => photos.id === this.props.song.id);
+
+            songDetails.songId = this.props.song.id;
+            songDetails.albumId = photos[0].albumId;
+            songDetails.songTitle = this.props.song.title;
+            songDetails.albumTitle = photos[0].title;
+            songDetails.albumURL = photos[0].url;
+            songDetails.thumbURL = photos[0].thumbnailUrl;
+            songDetails.userId = this.props.song.userId;
+        }        
 
         return (
             <Container>
@@ -43,19 +46,19 @@ class SongInfo extends React.Component {
                 <Row>
                     {
                         this.props.showThumbnails ?
-                            <Col><img src={songDetails.thumbURL}/></Col>
+                            <Col><img src={songDetails.thumbURL} alt="album art"/></Col>
                             : <Col></Col>
                     }
                     <Col xs lg="2">
                         {
-                            this.props.showPlaylistOptions ?
+                            this.props.showDeleteSongInPlaylist ?
                                 <ButtonGroup aria-label="list type">
                                     <Button variant="light">Delete</Button>                    
                                 </ButtonGroup> 
                                 : null
                         }
                         {
-                            this.props.createNewPlaylist ?
+                            this.props.showAddSongInPlaylist ?
                                 <ButtonGroup aria-label="list type">
                                     <Button variant="light">Add to list</Button>                    
                                 </ButtonGroup> 

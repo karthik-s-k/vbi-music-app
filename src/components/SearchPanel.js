@@ -3,14 +3,7 @@ import React from 'react';
 import InputGroup from 'react-bootstrap/InputGroup';
 import FormControl from 'react-bootstrap/FormControl';
 
-class SearchPanel extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            songName: '' 
-        };
-      }   
-    
+class SearchPanel extends React.Component { 
     render() {
         return (
             <div style={{width: "50%", margin: "2%"}}>

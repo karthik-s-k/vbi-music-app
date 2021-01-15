@@ -7,10 +7,13 @@ const initialState = {
 export default function songList(state=initialState, action) {
     const {type, payload} = action;
 
-    if (type === types.GET_SONGS_LIST) {
-        let songList = payload;
+    if (type === types.GET_ALBUMS_LIST) {
+        let songList = payload.filter(i => i.id < 10);
 
-        localStorage.setItem("allSongsList", JSON.stringify(payload));
+        if(localStorage.getItem("allSongsList")){
+            localStorage.removeItem("allSongsList");
+        }
+        localStorage.setItem("allSongsList", JSON.stringify(songList));
 
         return{
             ...state,

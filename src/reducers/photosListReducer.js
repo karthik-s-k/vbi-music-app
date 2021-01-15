@@ -8,9 +8,12 @@ export default function photosList(state=initialState, action) {
     const {type, payload} = action;
 
     if (type === types.GET_PHOTOS_LIST) {
-        let photosList = payload;
+        let photosList = payload.filter(i => i.id < 10);
 
-        localStorage.setItem("allPhotosList", JSON.stringify(payload));
+        if(localStorage.getItem("allPhotosList")){
+            localStorage.removeItem("allPhotosList");
+        }
+        localStorage.setItem("allPhotosList", JSON.stringify(photosList));
 
         return{
             ...state,

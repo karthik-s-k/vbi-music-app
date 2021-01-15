@@ -16,7 +16,7 @@ export const getAllSongsList = () => async dispatch => {
                    songList = Data;           
                })
         dispatch({
-            type: types.GET_SONGS_LIST,
+            type: types.GET_ALBUMS_LIST,
             payload: songList
         });  
 

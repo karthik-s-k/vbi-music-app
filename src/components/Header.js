@@ -7,13 +7,6 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
 class Header extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            songName: '' 
-        };
-      }
-    
     render() {
         return (
             <Container>

@@ -8,8 +8,10 @@ import Row from 'react-bootstrap/Row';
 
 import Header from "../components/Header";
 import SearchPanel from "../components/SearchPanel";
-import PlaylistPanel from "../components/PlaylistPanel";
 import SongsListPanel from "../components/SongsListPanel";
+import ShowAllPlaylistPage from "../components/ShowAllPlaylistPage";
+import NewPlaylistPage from "../components/NewPlaylistPage";
+import EditPlaylistPage from "../components/EditPlaylistPage";
 
 import * as MusicActions from '../actions/MusicActions';
 
@@ -19,42 +21,41 @@ class Dashboard extends React.Component {
         this.state = {
             allSongsTabSelected: true,
             playlistTabSelected: false,
-            showNewPlaylist: false,
+            showNewPlaylistPage: false,
+            showEditPlaylistPage: false,
             showThumbnails: false,
             searchBoxText: '',
-            filteredSearchResult: [],
-            playlistSet: [],
-            playlistSongs: []
+            filteredSearchResult: []
         };
 
         this.searchBoxChange = this.searchBoxChange.bind(this);
         this.allSongsTabSelect = this.allSongsTabSelect.bind(this);
         this.playlistTabSelect = this.playlistTabSelect.bind(this);
+
         this.fetchAllSongsList = this.fetchAllSongsList.bind(this);
         this.fetchSongsByName = this.fetchSongsByName.bind(this);
         this.fetchAllPhotosList = this.fetchAllPhotosList.bind(this);
-        this.fetchAllPlaylists = this.fetchAllPlaylists.bind(this);
-        this.fetchPlaylistSongs = this.fetchPlaylistSongs.bind(this);
-        this.createNewPlaylist = this.createNewPlaylist.bind(this);
         this.toggleShowingThumnails = this.toggleShowingThumnails.bind(this);
+
+        this.setShowNewPlaylistPageIndicator = this.setShowNewPlaylistPageIndicator.bind(this);
+        this.setShowEditPlaylistPageIndicator = this.setShowEditPlaylistPageIndicator.bind(this);
+        this.savePlaylistFromNewPage = this.savePlaylistFromNewPage.bind(this);
+        this.savePlaylistFromEditPage = this.savePlaylistFromEditPage.bind(this);
       }
 
     componentDidMount() {
         this.fetchAllSongsList();
     }
     
-    searchBoxChange(event) {
-        this.setState({ searchBoxText: event.target.value }, this.fetchSongsByName(event.target.value));
-    }
-
     allSongsTabSelect() {
-        this.setState({ allSongsTabSelected: true, playlistTabSelected: false }, this.fetchAllSongsList());
+        this.setState({ 
+                allSongsTabSelected: true, playlistTabSelected: false, showNewPlaylistPage: false, showEditPlaylistPage: false, 
+                searchBoxText: ""
+            }, this.fetchAllSongsList());
     }
-
     playlistTabSelect() {
-        this.setState({ playlistTabSelected: true, allSongsTabSelected: false }, this.fetchAllPlaylists());
+        this.setState({ searchBoxText:"", playlistTabSelected: true, allSongsTabSelected: false });
     }
-
     toggleShowingThumnails() {
         this.setState({ showThumbnails: !this.state.showThumbnails });
     }
@@ -62,26 +63,35 @@ class Dashboard extends React.Component {
     fetchAllSongsList() {
         this.props.MusicActions.getAllSongsList();
         this.fetchAllPhotosList();
-    }
-
-    fetchSongsByName(songName) {
-        this.setState({ filteredSearchResult: this.props.songsInfo.songList.filter(song => song.title.includes(songName)) });
-    }
-
+    }    
     fetchAllPhotosList() {
         this.props.MusicActions.getAllPhotosList();
     }
 
-    fetchAllPlaylists() {
-        this.setState({ playlistSet: localStorage.getItem("allPlaylists") });
+    searchBoxChange(event) {
+        this.setState({ searchBoxText: event.target.value }, this.fetchSongsByName(event.target.value));
+    }
+    fetchSongsByName(songName) {
+        if(songName === "") {
+            this.setState({ filteredSearchResult: [] });
+        }
+        else {
+            this.setState({ filteredSearchResult: this.props.songsInfo.songList.filter(song => song.title.includes(songName)) });
+        }        
     }
 
-    fetchPlaylistSongs(playlist_id) {
-        this.setState({ playlistSongs: this.state.playlistSet.filter(playlist => playlist.playlist_id === playlist_id) });
+    setShowNewPlaylistPageIndicator() {
+        this.setState({ showNewPlaylistPage: true, showEditPlaylistPage: false });
+    }
+    setShowEditPlaylistPageIndicator() {
+        this.setState({ showEditPlaylistPage: true, showNewPlaylistPage: false });
     }
 
-    createNewPlaylist() {
-        this.setState({ showNewPlaylist: true });
+    savePlaylistFromNewPage() {
+        this.setState({ showNewPlaylistPage: false, showEditPlaylistPage: false });
+    }
+    savePlaylistFromEditPage() {
+        this.setState({ showNewPlaylistPage: false, showEditPlaylistPage: false });
     }
 
     render() {
@@ -94,22 +104,37 @@ class Dashboard extends React.Component {
                         />
                 </Row>
                 
-                <Row className="justify-content-md-center">
-                    <SearchPanel 
-                        searchBoxText={this.state.searchBoxText} 
-                        searchBoxChange={this.searchBoxChange} 
-                        />
-                </Row>
+                {
+                    this.state.allSongsTabSelected || (this.state.showNewPlaylistPage || this.state.showEditPlaylistPage) ?
+                        <Row className="justify-content-md-center">
+                            <SearchPanel 
+                                searchBoxText={this.state.searchBoxText} 
+                                searchBoxChange={this.searchBoxChange} 
+                            />
+                        </Row>
+                        : null
+                }                
                 
                 <Row className="justify-content-md-center">
                     {
                         this.state.allSongsTabSelected ?
                             <SongsListPanel photosList={this.props.photosInfo.photosList} songList={this.props.songsInfo.songList} filteredSearchResult={this.state.filteredSearchResult} 
-                                showThumbnails={this.state.showThumbnails} />
-                            : 
-                            <PlaylistPanel showNewPlaylist={this.state.showNewPlaylist} playlistSet={this.state.playlistSet} playlistSongs={this.state.playlistSongs} 
-                                songList={this.props.songsInfo.songList} filteredSearchResult={this.state.filteredSearchResult} 
-                                createNewPlaylist={this.createNewPlaylist} />
+                                showThumbnails={this.state.showThumbnails} searchBoxText={this.state.searchBoxText} />
+                            : null
+                    }
+                    {
+                        this.state.playlistTabSelected && !this.state.showNewPlaylistPage && !this.state.showEditPlaylistPage ?
+                            <ShowAllPlaylistPage showNewPlaylistPage={this.state.showNewPlaylistPage} 
+                                setShowNewPlaylistPageIndicator={this.setShowNewPlaylistPageIndicator} setShowEditPlaylistPageIndicator={this.setShowEditPlaylistPageIndicator} />
+                            : this.state.showNewPlaylistPage && !this.state.showEditPlaylistPage ?
+                                <NewPlaylistPage photosList={this.props.photosInfo.photosList} songList={this.props.songsInfo.songList} filteredSearchResult={this.state.filteredSearchResult}
+                                    showThumbnails={this.state.showThumbnails} 
+                                    savePlaylistFromNewPage={this.savePlaylistFromNewPage} />
+                                : this.state.showEditPlaylistPage && !this.state.showNewPlaylistPage ?
+                                    <EditPlaylistPage photosList={this.props.photosInfo.photosList} songList={this.props.songsInfo.songList} filteredSearchResult={this.state.filteredSearchResult}
+                                        showThumbnails={this.state.showThumbnails} 
+                                        savePlaylistFromEditPage={this.savePlaylistFromNewPage} />
+                                    : null
                     }
                 </Row>
                 
