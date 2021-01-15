@@ -25,7 +25,10 @@ class Dashboard extends React.Component {
             showEditPlaylistPage: false,
             showThumbnails: false,
             searchBoxText: '',
-            filteredSearchResult: []
+            filteredSearchResult: [],
+            newPlaylistInfo: {},
+            editPlaylistInfo: {},
+            userAllPlaylists: []
         };
 
         this.searchBoxChange = this.searchBoxChange.bind(this);
@@ -41,7 +44,9 @@ class Dashboard extends React.Component {
         this.setShowEditPlaylistPageIndicator = this.setShowEditPlaylistPageIndicator.bind(this);
         this.savePlaylistFromNewPage = this.savePlaylistFromNewPage.bind(this);
         this.savePlaylistFromEditPage = this.savePlaylistFromEditPage.bind(this);
-      }
+        this.addSongToNewPlaylist = this.addSongToNewPlaylist.bind(this);
+        this.removeSongFromEditPlaylist = this.removeSongFromEditPlaylist.bind(this);
+    }
 
     componentDidMount() {
         this.fetchAllSongsList();
@@ -54,7 +59,12 @@ class Dashboard extends React.Component {
             }, this.fetchAllSongsList());
     }
     playlistTabSelect() {
-        this.setState({ searchBoxText:"", playlistTabSelected: true, allSongsTabSelected: false });
+        let userPlaylists = [];
+        if(localStorage.getItem("userPlaylists")) {
+            userPlaylists = JSON.parse(localStorage.getItem("userPlaylists"));
+        }        
+
+        this.setState({ searchBoxText:"", playlistTabSelected: true, allSongsTabSelected: false, userAllPlaylists: userPlaylists });
     }
     toggleShowingThumnails() {
         this.setState({ showThumbnails: !this.state.showThumbnails });
@@ -81,17 +91,125 @@ class Dashboard extends React.Component {
     }
 
     setShowNewPlaylistPageIndicator() {
-        this.setState({ showNewPlaylistPage: true, showEditPlaylistPage: false });
+        let playlistCounter = 0;
+        if(localStorage.getItem("userPlaylists")) {
+            let userPlaylists = JSON.parse(localStorage.getItem("userPlaylists"));
+            playlistCounter = userPlaylists.length;
+        }
+
+        let playlistInfo = {
+            "playlistId": playlistCounter + 1,
+            "playlistName": playlistCounter + 1,
+            "createdDate": new Date(),
+            "songs": []
+          };
+
+        this.setState({ showNewPlaylistPage: true, showEditPlaylistPage: false, newPlaylistInfo: playlistInfo });
     }
-    setShowEditPlaylistPageIndicator() {
-        this.setState({ showEditPlaylistPage: true, showNewPlaylistPage: false });
+    setShowEditPlaylistPageIndicator(selectedPlaylist) {
+        this.setState({ showEditPlaylistPage: true, showNewPlaylistPage: false, editPlaylistInfo: selectedPlaylist });
     }
 
-    savePlaylistFromNewPage() {
-        this.setState({ showNewPlaylistPage: false, showEditPlaylistPage: false });
+    savePlaylistFromNewPage(playlistInfo) {
+        let userPlaylists = [];
+        let savePlaylistData = playlistInfo;
+
+        if(localStorage.getItem("userPlaylists")) {
+            userPlaylists = JSON.parse(localStorage.getItem("userPlaylists"));
+            localStorage.removeItem("userPlaylists");            
+        }
+
+        userPlaylists.push(savePlaylistData);            
+        localStorage.setItem("userPlaylists", JSON.stringify(userPlaylists));
+
+        this.setState({ showNewPlaylistPage: false, showEditPlaylistPage: false, userAllPlaylists: userPlaylists, newPlaylistInfo: {} });
     }
-    savePlaylistFromEditPage() {
-        this.setState({ showNewPlaylistPage: false, showEditPlaylistPage: false });
+    savePlaylistFromEditPage(playlistInfo) {
+        let userPlaylists = [];
+        let savePlaylistData = playlistInfo;
+        let playlistIndex = 0;
+
+        if(localStorage.getItem("userPlaylists")) {
+            userPlaylists = JSON.parse(localStorage.getItem("userPlaylists"));
+            localStorage.removeItem("userPlaylists");   
+            
+            playlistIndex = userPlaylists.findIndex(playlist => playlist.playlistId === playlistInfo.playlistId);
+            userPlaylists.splice(playlistIndex, 1);
+        }
+
+        userPlaylists.push(savePlaylistData);            
+        localStorage.setItem("userPlaylists", JSON.stringify(userPlaylists));
+
+        this.setState({ showNewPlaylistPage: false, showEditPlaylistPage: false, userAllPlaylists: userPlaylists, editPlaylistInfo: {} });
+    }
+
+    addSongToNewPlaylist(playlistInfo, songInfo) {
+        let newPlaylistToBeSaved = this.state.newPlaylistInfo;
+
+        let songDetails = {
+            "songId": "",
+            "albumId": "",
+            "songTitle": "",
+            "albumTitle": "",
+            "albumURL": "",
+            "thumbURL": "",
+            "userId": ""
+        };
+
+        if (songInfo) {
+            songDetails = {
+                "songId": songInfo.songId,
+                "albumId": songInfo.albumId,
+                "songTitle": songInfo.songTitle,
+                "albumTitle": songInfo.albumTitle,
+                "albumURL": songInfo.albumURL,
+                "thumbURL": songInfo.thumbURL,
+                "userId": songInfo.userId
+            };
+        }
+
+        if(newPlaylistToBeSaved) {
+            newPlaylistToBeSaved.songs.push(songDetails);
+        }        
+        
+        this.setState({ newPlaylistInfo: newPlaylistToBeSaved });
+    }
+
+    removeSongFromEditPlaylist(playlistInfo, songInfo) {
+        let editPlaylistToBeSaved = this.state.editPlaylistInfo;
+        let playlistSongs = editPlaylistToBeSaved.songs;
+        let songIndex = 0;
+
+        let songDetails = {
+            "songId": "",
+            "albumId": "",
+            "songTitle": "",
+            "albumTitle": "",
+            "albumURL": "",
+            "thumbURL": "",
+            "userId": ""
+        };
+
+        if (songInfo) {
+            songDetails = {
+                "songId": songInfo.songId,
+                "albumId": songInfo.albumId,
+                "songTitle": songInfo.songTitle,
+                "albumTitle": songInfo.albumTitle,
+                "albumURL": songInfo.albumURL,
+                "thumbURL": songInfo.thumbURL,
+                "userId": songInfo.userId
+            };
+        }
+
+        if(editPlaylistToBeSaved && playlistSongs) {
+            songIndex = playlistSongs.findIndex(song => song.songId === songDetails.songId);
+            playlistSongs.splice(songIndex, 1);
+
+            editPlaylistToBeSaved.songs = playlistSongs;
+        }        
+        
+        this.setState({ editPlaylistInfo: editPlaylistToBeSaved });
     }
 
     render() {
@@ -124,16 +242,16 @@ class Dashboard extends React.Component {
                     }
                     {
                         this.state.playlistTabSelected && !this.state.showNewPlaylistPage && !this.state.showEditPlaylistPage ?
-                            <ShowAllPlaylistPage showNewPlaylistPage={this.state.showNewPlaylistPage} 
+                            <ShowAllPlaylistPage showNewPlaylistPage={this.state.showNewPlaylistPage} userAllPlaylists={this.state.userAllPlaylists}
                                 setShowNewPlaylistPageIndicator={this.setShowNewPlaylistPageIndicator} setShowEditPlaylistPageIndicator={this.setShowEditPlaylistPageIndicator} />
                             : this.state.showNewPlaylistPage && !this.state.showEditPlaylistPage ?
                                 <NewPlaylistPage photosList={this.props.photosInfo.photosList} songList={this.props.songsInfo.songList} filteredSearchResult={this.state.filteredSearchResult}
-                                    showThumbnails={this.state.showThumbnails} 
-                                    savePlaylistFromNewPage={this.savePlaylistFromNewPage} />
+                                    showThumbnails={this.state.showThumbnails} newPlaylistInfo={this.state.newPlaylistInfo}
+                                    savePlaylistFromNewPage={this.savePlaylistFromNewPage} addSongToNewPlaylist={this.addSongToNewPlaylist} />
                                 : this.state.showEditPlaylistPage && !this.state.showNewPlaylistPage ?
                                     <EditPlaylistPage photosList={this.props.photosInfo.photosList} songList={this.props.songsInfo.songList} filteredSearchResult={this.state.filteredSearchResult}
-                                        showThumbnails={this.state.showThumbnails} 
-                                        savePlaylistFromEditPage={this.savePlaylistFromNewPage} />
+                                        showThumbnails={this.state.showThumbnails} editPlaylistInfo={this.state.editPlaylistInfo}
+                                        savePlaylistFromEditPage={this.savePlaylistFromEditPage} removeSongFromEditPlaylist={this.removeSongFromEditPlaylist} />
                                     : null
                     }
                 </Row>

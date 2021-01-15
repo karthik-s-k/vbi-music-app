@@ -7,6 +7,15 @@ import ButtonGroup from 'react-bootstrap/ButtonGroup'
 import Button from 'react-bootstrap/Button';
 
 class SongInfo extends React.Component {
+
+    addSongToPlaylist(playlistInfo, songDetails) {
+        this.props.addSongToNewPlaylist(playlistInfo, songDetails);
+    }
+
+    removeSongFromPlaylist(playlistInfo, songDetails) {
+        this.props.removeSongFromEditPlaylist(playlistInfo, songDetails);
+    }
+
     render() {
         let photos = {};
         let songDetails = {
@@ -19,7 +28,16 @@ class SongInfo extends React.Component {
             "userId": ""
         };
 
-        if (this.props.song && this.props.photosList) {
+        if (this.props.isEditPlaylist) {
+            songDetails.songId = this.props.song.songId;
+            songDetails.albumId = this.props.song.albumId;
+            songDetails.songTitle = this.props.song.songTitle;
+            songDetails.albumTitle = this.props.song.albumTitle;
+            songDetails.albumURL = this.props.song.albumURL;
+            songDetails.thumbURL = this.props.song.thumbURL;
+            songDetails.userId = this.props.song.userId;
+        }
+        else if (this.props.song && this.props.photosList) {
             photos = this.props.photosList.filter(photos => photos.id === this.props.song.id);
 
             songDetails.songId = this.props.song.id;
@@ -34,7 +52,7 @@ class SongInfo extends React.Component {
         return (
             <Container>
                 <Row>
-                    <Col><div>Title: {songDetails.songTitle}</div>   </Col>
+                    <Col><div>Title: {songDetails.songTitle}</div></Col>
                     <Col xs lg="2"></Col>
                     <Col xs lg="2"></Col>
                 </Row>
@@ -53,14 +71,14 @@ class SongInfo extends React.Component {
                         {
                             this.props.showDeleteSongInPlaylist ?
                                 <ButtonGroup aria-label="list type">
-                                    <Button variant="light">Delete</Button>                    
+                                    <Button variant="light" onClick={this.removeSongFromPlaylist.bind(this, this.props.editPlaylistInfo, songDetails)}>Delete</Button>                    
                                 </ButtonGroup> 
                                 : null
                         }
                         {
                             this.props.showAddSongInPlaylist ?
                                 <ButtonGroup aria-label="list type">
-                                    <Button variant="light">Add to list</Button>                    
+                                    <Button variant="light" onClick={this.addSongToPlaylist.bind(this, this.props.playlistInfo, songDetails)}>Add to list</Button>                    
                                 </ButtonGroup> 
                                 : null
                         }

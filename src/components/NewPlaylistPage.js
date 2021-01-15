@@ -9,8 +9,18 @@ import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Button from 'react-bootstrap/Button';
 
 class NewPlaylistPage extends React.Component {
+
+    savePlaylistAction(playlistInfo) {
+        this.props.savePlaylistFromNewPage(playlistInfo);
+    }
+
     render() {
         let songList = [];
+        let playlistInfo = {};
+        
+        if(this.props.newPlaylistInfo) {
+            playlistInfo = this.props.newPlaylistInfo;
+        }
 
         if(this.props.filteredSearchResult && this.props.filteredSearchResult.length < 1) {
             songList = this.props.songList;
@@ -22,10 +32,10 @@ class NewPlaylistPage extends React.Component {
         return (
             <Container>
                 <Row>
-                    <Col>Playlist 1</Col>
+                    <Col>Playlist: {playlistInfo.playlistName}</Col>
                     <Col>
                         <ButtonGroup aria-label="list type">
-                            <Button variant="light" onClick={this.props.savePlaylistFromNewPage}>Save playlist</Button>
+                            <Button variant="light" onClick={this.savePlaylistAction.bind(this, playlistInfo)}>Save playlist</Button>
                         </ButtonGroup>
                     </Col>
                 </Row>
@@ -33,7 +43,8 @@ class NewPlaylistPage extends React.Component {
                     this.props.photosList && songList && songList.map((song, index) => {                  
                         return (
                             <SongInfo key={song.id} song={song} photosList={this.props.photosList} showThumbnails={this.props.showThumbnails} 
-                                showAddSongInPlaylist={true} />
+                                showAddSongInPlaylist={true} playlistInfo={playlistInfo} 
+                                addSongToNewPlaylist={this.props.addSongToNewPlaylist} />
                             );
                         })
                 }

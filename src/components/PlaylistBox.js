@@ -6,13 +6,11 @@ import Row from 'react-bootstrap/Row';
 
 class PlaylistBox extends React.Component {
     render() {
-        let userPlaylists = 5;
-
         return (
             <Container>
                 <Row>
-                    <Col>Playlist 1</Col>
-                    <Col>Created Date: 01-01-2021</Col>
+                    <Col>Playlist: {this.props.playlist.playlistName}</Col>
+                    <Col>Created Date: {new Date(this.props.playlist.createdDate).toISOString().split('T')[0]}</Col>
                 </Row>
             </Container>
             );
