@@ -9,8 +9,27 @@ import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Button from 'react-bootstrap/Button';
 
 class NewPlaylistPage extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            playlistName: ''
+        };
+
+        this.onPlaylistNameChange = this.onPlaylistNameChange.bind(this);
+    }
+
+    componentDidMount() {
+        if(this.props.newPlaylistInfo) {
+            this.setState({ playlistName: this.props.newPlaylistInfo.playlistName })
+        }
+    }
+
+    onPlaylistNameChange(event) {
+        this.setState({ playlistName: event.target. value })
+    }
 
     savePlaylistAction(playlistInfo) {
+        playlistInfo.playlistName = this.state.playlistName;
         this.props.savePlaylistFromNewPage(playlistInfo);
     }
 
@@ -32,7 +51,7 @@ class NewPlaylistPage extends React.Component {
         return (
             <Container>
                 <Row>
-                    <Col>Playlist: {playlistInfo.playlistName}</Col>
+                <Col>Playlist <input type="text" value={this.state.playlistName} onChange={this.onPlaylistNameChange} /></Col>
                     <Col>
                         <ButtonGroup aria-label="list type">
                             <Button variant="light" onClick={this.savePlaylistAction.bind(this, playlistInfo)}>Save playlist</Button>

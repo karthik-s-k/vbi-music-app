@@ -101,6 +101,7 @@ class Dashboard extends React.Component {
             "playlistId": playlistCounter + 1,
             "playlistName": playlistCounter + 1,
             "createdDate": new Date(),
+            "updatedDate": new Date(),
             "songs": []
           };
 
@@ -113,6 +114,8 @@ class Dashboard extends React.Component {
     savePlaylistFromNewPage(playlistInfo) {
         let userPlaylists = [];
         let savePlaylistData = playlistInfo;
+        
+        savePlaylistData.updatedDate = new Date();
 
         if(localStorage.getItem("userPlaylists")) {
             userPlaylists = JSON.parse(localStorage.getItem("userPlaylists"));
@@ -128,6 +131,8 @@ class Dashboard extends React.Component {
         let userPlaylists = [];
         let savePlaylistData = playlistInfo;
         let playlistIndex = 0;
+
+        savePlaylistData.updatedDate = new Date();
 
         if(localStorage.getItem("userPlaylists")) {
             userPlaylists = JSON.parse(localStorage.getItem("userPlaylists"));

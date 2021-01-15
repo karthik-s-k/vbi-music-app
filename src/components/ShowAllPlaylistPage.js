@@ -14,10 +14,12 @@ class ShowAllPlaylistPage extends React.Component {
     }
 
     render() {
+        let allPlaylists = this.props.userAllPlaylists;
+
         return (
             <Container>
                 {
-                    this.props.userAllPlaylists && this.props.userAllPlaylists.map((playlist) => {
+                    allPlaylists && allPlaylists.map((playlist) => {
                         return (
                             <Row key={playlist.playlistId} onClick={this.openPlaylistForEdit.bind(this, playlist)}>
                                 <Card style={{padding: "1%"}}> 

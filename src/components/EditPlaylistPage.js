@@ -9,8 +9,27 @@ import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Button from 'react-bootstrap/Button';
 
 class EditPlaylistPage extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            playlistName: ''
+        };
+
+        this.onPlaylistNameChange = this.onPlaylistNameChange.bind(this);
+    }
+
+    componentDidMount() {
+        if(this.props.editPlaylistInfo) {
+            this.setState({ playlistName: this.props.editPlaylistInfo.playlistName })
+        }
+    }
+
+    onPlaylistNameChange(event) {
+        this.setState({ playlistName: event.target. value })
+    }
 
     savePlaylistAction(playlistInfo) {
+        playlistInfo.playlistName = this.state.playlistName;
         this.props.savePlaylistFromEditPage(playlistInfo);
     }
 
@@ -28,7 +47,7 @@ class EditPlaylistPage extends React.Component {
         return (
             <Container>
                 <Row>
-                    <Col>Playlist {editPlayList.playlistName}</Col>
+                    <Col>Playlist <input type="text" value={this.state.playlistName} onChange={this.onPlaylistNameChange} /></Col>
                     <Col>
                         <ButtonGroup aria-label="list type">
                             <Button variant="light">Shuffle playlist</Button>
