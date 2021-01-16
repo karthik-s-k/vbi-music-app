@@ -8,16 +8,16 @@ import Button from 'react-bootstrap/Button';
 
 class SongInfo extends React.Component {
 
-    addSongToPlaylist(playlistInfo, songDetails) {
-        this.props.addSongToNewPlaylist(playlistInfo, songDetails);
+    addSongToPlaylist(songDetails) {
+        this.props.addSongToNewPlaylist(songDetails);
     }
 
-    removeSongFromPlaylist(playlistInfo, songDetails) {
-        this.props.removeSongFromEditPlaylist(playlistInfo, songDetails);
+    removeSongFromPlaylist(songDetails) {
+        this.props.removeSongFromEditPlaylist(songDetails);
     }
 
-    addSongToEditPlaylist(playlistInfo, songDetails) {
-        this.props.addSongToEditPlaylist(playlistInfo, songDetails);
+    addSongToEditPlaylist(songDetails) {
+        this.props.addSongToEditPlaylist(songDetails);
     }
 
     render() {
@@ -75,7 +75,7 @@ class SongInfo extends React.Component {
                         {
                             this.props.showDeleteSongInPlaylist ?
                                 <ButtonGroup aria-label="list type">
-                                    <Button variant="light" onClick={this.removeSongFromPlaylist.bind(this, this.props.editPlaylistInfo, songDetails)}>Delete</Button>                    
+                                    <Button variant="light" onClick={this.removeSongFromPlaylist.bind(this, songDetails)}>Delete</Button>                    
                                 </ButtonGroup> 
                                 : null
                         }
@@ -84,8 +84,8 @@ class SongInfo extends React.Component {
                                     <ButtonGroup aria-label="list type">
                                         {
                                             this.props.isEditPlaylist ?
-                                                <Button variant="light" onClick={this.addSongToEditPlaylist.bind(this, this.props.editPlaylistInfo, songDetails)}>Add to list</Button>                    
-                                                :   <Button variant="light" onClick={this.addSongToPlaylist.bind(this, this.props.playlistInfo, songDetails)}>Add to list</Button> 
+                                                <Button variant="light" onClick={this.addSongToEditPlaylist.bind(this, songDetails)}>Add to list</Button>                    
+                                                :   <Button variant="light" onClick={this.addSongToPlaylist.bind(this, songDetails)}>Add to list</Button> 
                                         }
                                     </ButtonGroup>
                                     : null

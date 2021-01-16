@@ -8,7 +8,7 @@ export default function songList(state=initialState, action) {
     const {type, payload} = action;
 
     if (type === types.GET_ALBUMS_LIST) {
-        let songList = payload.filter(i => i.id < 10);
+        let songList = payload;
 
         return{
             ...state,

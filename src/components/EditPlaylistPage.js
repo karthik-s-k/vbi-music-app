@@ -2,7 +2,6 @@ import React from 'react';
 import SongInfo from "./SongInfo";
 
 import Container from 'react-bootstrap/Container';
-import Card from 'react-bootstrap/Card';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
@@ -86,7 +85,7 @@ class EditPlaylistPage extends React.Component {
                 {
                     this.state.showNewSongsList && newSongsList && newSongsList.map((newSong, index) => {
                         return (
-                            <SongInfo key={index} song={newSong} photosList={this.props.photosList} editPlaylistInfo={editPlayList} showThumbnails={this.props.showThumbnails} 
+                            <SongInfo key={index} song={newSong} photosList={this.props.photosList} showThumbnails={this.props.showThumbnails} 
                                 showAddSongInPlaylist={true} isEditPlaylist={true} showNewSongsList={true} addSongToEditPlaylist={this.props.addSongToEditPlaylist} />
                             );
                     })
@@ -94,7 +93,7 @@ class EditPlaylistPage extends React.Component {
                 {
                     songList && songList.map((song, index) => {                  
                         return (
-                            <SongInfo key={index} song={song} editPlaylistInfo={editPlayList} showThumbnails={this.props.showThumbnails} 
+                            <SongInfo key={index} song={song} showThumbnails={this.props.showThumbnails} 
                                 showDeleteSongInPlaylist={true} showAddSongInPlaylist={false} isEditPlaylist={true}  
                                 removeSongFromEditPlaylist={this.props.removeSongFromEditPlaylist} />
                             );

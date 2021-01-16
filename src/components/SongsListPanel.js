@@ -10,7 +10,7 @@ class SongsListPanel extends React.Component {
         if(this.props.filteredSearchResult && this.props.filteredSearchResult.length < 1) {
             songList = this.props.songList;
         }
-        else if (this.props.searchBoxText !== "" && this.props.filteredSearchResult && this.props.filteredSearchResult.length > 0) {
+        else if (this.props.filteredSearchResult && this.props.filteredSearchResult.length > 0) {
             songList = this.props.filteredSearchResult;
         }
 
@@ -19,7 +19,7 @@ class SongsListPanel extends React.Component {
                 {
                     this.props.photosList && songList && songList.map((song, index) => {                  
                         return (
-                            <SongInfo key={song.id} song={song} photosList={this.props.photosList} showThumbnails={this.props.showThumbnails} />
+                            <SongInfo key={index} song={song} photosList={this.props.photosList} showThumbnails={this.props.showThumbnails} />
                             );
                         })
                 }

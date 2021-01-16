@@ -2,7 +2,6 @@ import React from 'react';
 import SongInfo from "./SongInfo";
 
 import Container from 'react-bootstrap/Container';
-import Card from 'react-bootstrap/Card';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
@@ -34,7 +33,6 @@ class NewPlaylistPage extends React.Component {
     }
 
     render() {
-        debugger;
         let songList = [];
         let updatedSongsList = [];
         let playlistSongs = [];
@@ -75,8 +73,8 @@ class NewPlaylistPage extends React.Component {
                 {
                     this.props.photosList && songList && songList.map((song, index) => {                  
                         return (
-                            <SongInfo key={song.id} song={song} photosList={this.props.photosList} showThumbnails={this.props.showThumbnails} 
-                                showAddSongInPlaylist={true} playlistInfo={playlistInfo} 
+                            <SongInfo key={index} song={song} photosList={this.props.photosList} showThumbnails={this.props.showThumbnails} 
+                                showAddSongInPlaylist={true}
                                 addSongToNewPlaylist={this.props.addSongToNewPlaylist} />
                             );
                         })

@@ -57,7 +57,7 @@ class Dashboard extends React.Component {
     allSongsTabSelect() {
         this.setState({ 
                 allSongsTabSelected: true, playlistTabSelected: false, showNewPlaylistPage: false, 
-                showEditPlaylistPage: false, searchBoxText: ""
+                showEditPlaylistPage: false
             }, this.fetchAllSongsList());
     }
     playlistTabSelect() {
@@ -66,7 +66,7 @@ class Dashboard extends React.Component {
             userPlaylists = JSON.parse(localStorage.getItem("userPlaylists"));
         }        
 
-        this.setState({ searchBoxText:"", playlistTabSelected: true, allSongsTabSelected: false, showNewPlaylistPage: false,
+        this.setState({ playlistTabSelected: true, allSongsTabSelected: false, showNewPlaylistPage: false,
             showEditPlaylistPage: false, newPlaylistInfo: {}, editPlaylistInfo: {}, userAllPlaylists: userPlaylists });
     }
     toggleShowingThumnails() {
@@ -151,7 +151,7 @@ class Dashboard extends React.Component {
         this.setState({ showNewPlaylistPage: false, showEditPlaylistPage: false, userAllPlaylists: userPlaylists, editPlaylistInfo: {} });
     }
 
-    addSongToNewPlaylist(playlistInfo, songInfo) {
+    addSongToNewPlaylist(songInfo) {
         let newPlaylistToBeSaved = this.state.newPlaylistInfo;
 
         let songDetails = {
@@ -183,7 +183,7 @@ class Dashboard extends React.Component {
         this.setState({ newPlaylistInfo: newPlaylistToBeSaved });
     }
 
-    removeSongFromEditPlaylist(playlistInfo, songInfo) {
+    removeSongFromEditPlaylist(songInfo) {
         let editPlaylistToBeSaved = this.state.editPlaylistInfo;
         let playlistSongs = editPlaylistToBeSaved.songs;
         let songIndex = 0;
@@ -236,7 +236,7 @@ class Dashboard extends React.Component {
         this.setState({ editPlaylistInfo: updatedPlaylist });
     }
 
-    addSongToEditPlaylist(playlistInfo, songInfo) {
+    addSongToEditPlaylist(songInfo) {
         let editPlaylistToBeSaved = this.state.editPlaylistInfo;
         let playlistSongs = editPlaylistToBeSaved.songs;
 
