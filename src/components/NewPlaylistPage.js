@@ -25,7 +25,7 @@ class NewPlaylistPage extends React.Component {
     }
 
     onPlaylistNameChange(event) {
-        this.setState({ playlistName: event.target. value })
+        this.setState({ playlistName: event.target.value })
     }
 
     savePlaylistAction(playlistInfo) {
@@ -34,11 +34,15 @@ class NewPlaylistPage extends React.Component {
     }
 
     render() {
+        debugger;
         let songList = [];
+        let updatedSongsList = [];
+        let playlistSongs = [];
         let playlistInfo = {};
         
         if(this.props.newPlaylistInfo) {
             playlistInfo = this.props.newPlaylistInfo;
+            playlistSongs = playlistInfo.songs;
         }
 
         if(this.props.filteredSearchResult && this.props.filteredSearchResult.length < 1) {
@@ -47,6 +51,16 @@ class NewPlaylistPage extends React.Component {
         else if (this.props.filteredSearchResult && this.props.filteredSearchResult.length > 0) {
             songList = this.props.filteredSearchResult;
         }
+        updatedSongsList = songList;
+
+        playlistSongs.map((playlistSong, index) => {
+            let songExists = songList.some(song => song.id === playlistSong.songId);
+            if(songExists) {
+                updatedSongsList.splice(index, 1);
+            }
+        });
+
+        songList = updatedSongsList;
 
         return (
             <Container>

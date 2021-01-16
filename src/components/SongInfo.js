@@ -16,6 +16,10 @@ class SongInfo extends React.Component {
         this.props.removeSongFromEditPlaylist(playlistInfo, songDetails);
     }
 
+    addSongToEditPlaylist(playlistInfo, songDetails) {
+        this.props.addSongToEditPlaylist(playlistInfo, songDetails);
+    }
+
     render() {
         let photos = {};
         let songDetails = {
@@ -28,7 +32,7 @@ class SongInfo extends React.Component {
             "userId": ""
         };
 
-        if (this.props.isEditPlaylist) {
+        if (this.props.isEditPlaylist && this.props.showAddSongInPlaylist === false) {
             songDetails.songId = this.props.song.songId;
             songDetails.albumId = this.props.song.albumId;
             songDetails.songTitle = this.props.song.songTitle;
@@ -36,7 +40,7 @@ class SongInfo extends React.Component {
             songDetails.albumURL = this.props.song.albumURL;
             songDetails.thumbURL = this.props.song.thumbURL;
             songDetails.userId = this.props.song.userId;
-        }
+        }        
         else if (this.props.song && this.props.photosList) {
             photos = this.props.photosList.filter(photos => photos.id === this.props.song.id);
 
@@ -76,11 +80,15 @@ class SongInfo extends React.Component {
                                 : null
                         }
                         {
-                            this.props.showAddSongInPlaylist ?
-                                <ButtonGroup aria-label="list type">
-                                    <Button variant="light" onClick={this.addSongToPlaylist.bind(this, this.props.playlistInfo, songDetails)}>Add to list</Button>                    
-                                </ButtonGroup> 
-                                : null
+                            this.props.showAddSongInPlaylist ?                                
+                                    <ButtonGroup aria-label="list type">
+                                        {
+                                            this.props.isEditPlaylist ?
+                                                <Button variant="light" onClick={this.addSongToEditPlaylist.bind(this, this.props.editPlaylistInfo, songDetails)}>Add to list</Button>                    
+                                                :   <Button variant="light" onClick={this.addSongToPlaylist.bind(this, this.props.playlistInfo, songDetails)}>Add to list</Button> 
+                                        }
+                                    </ButtonGroup>
+                                    : null
                         }
                     </Col>
                     <Col xs lg="2"></Col>

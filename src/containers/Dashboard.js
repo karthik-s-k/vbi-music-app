@@ -46,6 +46,8 @@ class Dashboard extends React.Component {
         this.savePlaylistFromEditPage = this.savePlaylistFromEditPage.bind(this);
         this.addSongToNewPlaylist = this.addSongToNewPlaylist.bind(this);
         this.removeSongFromEditPlaylist = this.removeSongFromEditPlaylist.bind(this);
+        this.shufflePlaylistSongs = this.shufflePlaylistSongs.bind(this);
+        this.addSongToEditPlaylist = this.addSongToEditPlaylist.bind(this);
     }
 
     componentDidMount() {
@@ -54,8 +56,8 @@ class Dashboard extends React.Component {
     
     allSongsTabSelect() {
         this.setState({ 
-                allSongsTabSelected: true, playlistTabSelected: false, showNewPlaylistPage: false, showEditPlaylistPage: false, 
-                searchBoxText: ""
+                allSongsTabSelected: true, playlistTabSelected: false, showNewPlaylistPage: false, 
+                showEditPlaylistPage: false, searchBoxText: ""
             }, this.fetchAllSongsList());
     }
     playlistTabSelect() {
@@ -64,7 +66,8 @@ class Dashboard extends React.Component {
             userPlaylists = JSON.parse(localStorage.getItem("userPlaylists"));
         }        
 
-        this.setState({ searchBoxText:"", playlistTabSelected: true, allSongsTabSelected: false, userAllPlaylists: userPlaylists });
+        this.setState({ searchBoxText:"", playlistTabSelected: true, allSongsTabSelected: false, showNewPlaylistPage: false,
+            showEditPlaylistPage: false, newPlaylistInfo: {}, editPlaylistInfo: {}, userAllPlaylists: userPlaylists });
     }
     toggleShowingThumnails() {
         this.setState({ showThumbnails: !this.state.showThumbnails });
@@ -217,6 +220,56 @@ class Dashboard extends React.Component {
         this.setState({ editPlaylistInfo: editPlaylistToBeSaved });
     }
 
+    shufflePlaylistSongs(playlistInfo) {
+        let playlistSongs = playlistInfo.songs;
+        let shuffledSongs = [];
+
+        if(playlistSongs) {
+            shuffledSongs = playlistSongs.map((a) => ({sort: Math.random(), value: a}))
+                                        .sort((a, b) => a.sort - b.sort)
+                                        .map((a) => a.value);       
+        }
+
+        playlistInfo.songs = shuffledSongs;
+        let updatedPlaylist = playlistInfo;
+
+        this.setState({ editPlaylistInfo: updatedPlaylist });
+    }
+
+    addSongToEditPlaylist(playlistInfo, songInfo) {
+        let editPlaylistToBeSaved = this.state.editPlaylistInfo;
+        let playlistSongs = editPlaylistToBeSaved.songs;
+
+        let songDetails = {
+            "songId": "",
+            "albumId": "",
+            "songTitle": "",
+            "albumTitle": "",
+            "albumURL": "",
+            "thumbURL": "",
+            "userId": ""
+        };
+
+        if (songInfo) {
+            songDetails = {
+                "songId": songInfo.songId,
+                "albumId": songInfo.albumId,
+                "songTitle": songInfo.songTitle,
+                "albumTitle": songInfo.albumTitle,
+                "albumURL": songInfo.albumURL,
+                "thumbURL": songInfo.thumbURL,
+                "userId": songInfo.userId
+            };
+        }
+
+        if(editPlaylistToBeSaved) {
+            playlistSongs.push(songDetails);
+            editPlaylistToBeSaved.songs = playlistSongs;
+        }        
+        
+        this.setState({ editPlaylistInfo: editPlaylistToBeSaved });
+    }
+
     render() {
         return (
             <Container>
@@ -256,7 +309,8 @@ class Dashboard extends React.Component {
                                 : this.state.showEditPlaylistPage && !this.state.showNewPlaylistPage ?
                                     <EditPlaylistPage photosList={this.props.photosInfo.photosList} songList={this.props.songsInfo.songList} filteredSearchResult={this.state.filteredSearchResult}
                                         showThumbnails={this.state.showThumbnails} editPlaylistInfo={this.state.editPlaylistInfo}
-                                        savePlaylistFromEditPage={this.savePlaylistFromEditPage} removeSongFromEditPlaylist={this.removeSongFromEditPlaylist} />
+                                        savePlaylistFromEditPage={this.savePlaylistFromEditPage} removeSongFromEditPlaylist={this.removeSongFromEditPlaylist} 
+                                        shufflePlaylistSongs={this.shufflePlaylistSongs} addSongToEditPlaylist={this.addSongToEditPlaylist} />
                                     : null
                     }
                 </Row>
