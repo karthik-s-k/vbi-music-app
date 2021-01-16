@@ -1,11 +1,11 @@
-import React from 'react';
+import React from "react";
 import PlaylistBox from "./PlaylistBox";
 
-import Container from 'react-bootstrap/Container';
-import Card from 'react-bootstrap/Card';
-import Row from 'react-bootstrap/Row';
-import ButtonGroup from 'react-bootstrap/ButtonGroup';
-import Button from 'react-bootstrap/Button';
+import Container from "react-bootstrap/Container";
+import Card from "react-bootstrap/Card";
+import Row from "react-bootstrap/Row";
+import ButtonGroup from "react-bootstrap/ButtonGroup";
+import Button from "react-bootstrap/Button";
 
 class ShowAllPlaylistPage extends React.Component {    
 
@@ -18,6 +18,13 @@ class ShowAllPlaylistPage extends React.Component {
 
         return (
             <Container>
+                <Row>
+                    <ButtonGroup aria-label="list type">
+                        <Button variant="light" onClick={this.props.setShowNewPlaylistPageIndicator}>
+                            <i class="fas fa-plus"></i> Create playlist
+                        </Button>
+                    </ButtonGroup>
+                </Row>
                 {
                     allPlaylists && allPlaylists.map((playlist) => {
                         return (
@@ -28,12 +35,7 @@ class ShowAllPlaylistPage extends React.Component {
                             </Row>
                         );
                     })
-                }          
-                <Row>
-                    <ButtonGroup aria-label="list type">
-                        <Button variant="light" onClick={this.props.setShowNewPlaylistPageIndicator}>Create playlist</Button>
-                    </ButtonGroup>
-                </Row>
+                }
             </Container>
             );
         }

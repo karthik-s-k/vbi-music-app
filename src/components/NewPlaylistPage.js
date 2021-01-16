@@ -1,11 +1,10 @@
-import React from 'react';
+import React from "react";
 import SongInfo from "./SongInfo";
 
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import ButtonGroup from 'react-bootstrap/ButtonGroup';
-import Button from 'react-bootstrap/Button';
+import ButtonGroup from "react-bootstrap/ButtonGroup";
+import Button from "react-bootstrap/Button";
+import InputGroup from "react-bootstrap/InputGroup";
+import FormControl from "react-bootstrap/FormControl";
 
 class NewPlaylistPage extends React.Component {
     constructor(props) {
@@ -61,15 +60,34 @@ class NewPlaylistPage extends React.Component {
         songList = updatedSongsList;
 
         return (
-            <Container>
-                <Row>
-                <Col>Playlist <input type="text" value={this.state.playlistName} onChange={this.onPlaylistNameChange} /></Col>
-                    <Col>
-                        <ButtonGroup aria-label="list type">
-                            <Button variant="light" onClick={this.savePlaylistAction.bind(this, playlistInfo)}>Save playlist</Button>
+            <div className="container">
+                <div className="row no-gutters mb-3">
+                    <div className="col-sm-10 px-3">
+                        <h3>                   
+                            <span>Playlist </span>         
+                            <InputGroup className="mb-3">
+                                <FormControl
+                                    type="text"
+                                    className="form-control"
+                                    name="playlistName"
+                                    id="playlistName"
+                                    placeholder="Playlist name "
+                                    autoFocus=""
+                                    onChange={this.onPlaylistNameChange}
+                                    autoComplete="off"
+                                    value={this.state.playlistName}
+                                />
+                            </InputGroup>
+                        </h3>
+                    </div>
+                    <div className="col-sm-2">
+                        <ButtonGroup aria-label="list type" className="d-flex">
+                            <Button variant="light" onClick={this.props.savePlaylistFromNewPage}>
+                                Save playlist
+                            </Button>
                         </ButtonGroup>
-                    </Col>
-                </Row>
+                    </div>
+                </div>
                 {
                     this.props.photosList && songList && songList.map((song, index) => {                  
                         return (
@@ -79,7 +97,7 @@ class NewPlaylistPage extends React.Component {
                             );
                         })
                 }
-            </Container>
+            </div>
             );
         }
 }

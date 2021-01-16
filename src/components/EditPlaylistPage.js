@@ -1,11 +1,10 @@
-import React from 'react';
+import React from "react";
 import SongInfo from "./SongInfo";
 
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import ButtonGroup from 'react-bootstrap/ButtonGroup';
-import Button from 'react-bootstrap/Button';
+import ButtonGroup from "react-bootstrap/ButtonGroup";
+import Button from "react-bootstrap/Button";
+import InputGroup from "react-bootstrap/InputGroup";
+import FormControl from "react-bootstrap/FormControl";
 
 class EditPlaylistPage extends React.Component {
     constructor(props) {
@@ -71,17 +70,40 @@ class EditPlaylistPage extends React.Component {
         }
 
         return (
-            <Container>
-                <Row>
-                    <Col>Playlist <input type="text" value={this.state.playlistName} onChange={this.onPlaylistNameChange} /></Col>
-                    <Col>
-                        <ButtonGroup aria-label="list type">
-                            <Button variant="light" onClick={this.shuffleSongsInPlaylist.bind(this, editPlayList)}>Shuffle playlist</Button>
-                            <Button variant="light" onClick={this.showNewSongsToAdd}>Add song</Button>
-                            <Button variant="light" onClick={this.savePlaylistAction.bind(this, editPlayList)}>Save playlist</Button>
+            <div className="container">
+                <div className="row no-gutters mb-3">
+                    <div className="col-sm-6 px-3">
+                        <h3>                            
+                            <span>Playlist </span>
+                            <InputGroup className="mb-3">
+                                <FormControl
+                                    type="text"
+                                    className="form-control"
+                                    name="playlistName"
+                                    id="playlistName"
+                                    autoFocus=""
+                                    onChange={this.onPlaylistNameChange}
+                                    autoComplete="off"
+                                    value={this.state.playlistName}
+                                />
+                            </InputGroup>
+                        </h3>
+                    </div>
+                    <div className="col-sm-6">
+                        <ButtonGroup aria-label="list type" className="d-flex">
+                            <Button variant="light" onClick={this.shuffleSongsInPlaylist.bind(this, editPlayList)}>
+                                <i class="fas fa-random"></i> Shuffle playlist
+                            </Button>
+                            <Button variant="light" onClick={this.showNewSongsToAdd}>
+                                <i class="fas fa-plus"></i> Add song
+                            </Button>
+                            <Button variant="light" onClick={this.savePlaylistAction.bind(this, editPlayList)}>
+                                <i class="fas fa-save"></i> Save playlist
+                            </Button>
                         </ButtonGroup>
-                    </Col>
-                </Row>
+                    </div>
+                </div>
+            
                 {
                     this.state.showNewSongsList && newSongsList && newSongsList.map((newSong, index) => {
                         return (
@@ -90,6 +112,7 @@ class EditPlaylistPage extends React.Component {
                             );
                     })
                 }
+                
                 {
                     songList && songList.map((song, index) => {                  
                         return (
@@ -99,7 +122,7 @@ class EditPlaylistPage extends React.Component {
                             );
                         })
                 }                
-            </Container>
+            </div>
             );
         }
 }

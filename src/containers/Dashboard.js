@@ -1,11 +1,11 @@
-import React from 'react';
-import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
-import PropTypes from 'prop-types';
+import React from "react";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import PropTypes from "prop-types";
 
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-
+import Jumbotron from "react-bootstrap/Jumbotron";
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
 import Header from "../components/Header";
 import SearchPanel from "../components/SearchPanel";
 import SongsListPanel from "../components/SongsListPanel";
@@ -13,7 +13,8 @@ import ShowAllPlaylistPage from "../components/ShowAllPlaylistPage";
 import NewPlaylistPage from "../components/NewPlaylistPage";
 import EditPlaylistPage from "../components/EditPlaylistPage";
 
-import * as MusicActions from '../actions/MusicActions';
+import * as MusicActions from "../actions/MusicActions";
+import "../assets/CSS/Main.css";
 
 class Dashboard extends React.Component {
     constructor(props) {
@@ -272,50 +273,60 @@ class Dashboard extends React.Component {
 
     render() {
         return (
-            <Container>
-                <Row className="justify-content-md-center">
-                    <Header 
-                        allSongsTabSelected={this.state.allSongsTabSelected} playlistTabSelected={this.state.playlistTabSelected} showThumbnails={this.state.showThumbnails}
-                        allSongsTabSelect={this.allSongsTabSelect} playlistTabSelect={this.playlistTabSelect} toggleShowingThumnails={this.toggleShowingThumnails}
-                        />
-                </Row>
-                
-                {
-                    this.state.allSongsTabSelected || (this.state.showNewPlaylistPage || this.state.showEditPlaylistPage) ?
-                        <Row className="justify-content-md-center">
-                            <SearchPanel 
-                                searchBoxText={this.state.searchBoxText} 
-                                searchBoxChange={this.searchBoxChange} 
+            <div>
+                <Jumbotron fluid style={{ backgroundImage: "https://unsplash.com/photos/YrtFlrLo2DQ" }}>
+                    <Container>
+                        <h1>VBI Music</h1>
+                        <p>A Simple music search platform</p>
+                    </Container>
+                </Jumbotron>
+                <Container>
+                    <Row className="justify-content-md-center">
+                        <Header 
+                            allSongsTabSelected={this.state.allSongsTabSelected} playlistTabSelected={this.state.playlistTabSelected} showThumbnails={this.state.showThumbnails}
+                            allSongsTabSelected={this.state.allSongsTabSelected} showNewPlaylistPage={this.state.showNewPlaylistPage} showEditPlaylistPage={this.state.showEditPlaylistPage}
+                            allSongsTabSelect={this.allSongsTabSelect} playlistTabSelect={this.playlistTabSelect} toggleShowingThumnails={this.toggleShowingThumnails}
                             />
-                        </Row>
-                        : null
-                }                
-                
-                <Row className="justify-content-md-center">
+                    </Row>
+                    
                     {
-                        this.state.allSongsTabSelected ?
-                            <SongsListPanel photosList={this.props.photosInfo.photosList} songList={this.props.songsInfo.songList} filteredSearchResult={this.state.filteredSearchResult} 
-                                showThumbnails={this.state.showThumbnails} searchBoxText={this.state.searchBoxText} />
+                        (this.state.allSongsTabSelected || (this.state.showNewPlaylistPage || this.state.showEditPlaylistPage)) ?
+                            <div className="col-sm-12  d-flex justify-content-center">
+                                <div className="col-sm-8">
+                                    <SearchPanel 
+                                        searchBoxText={this.state.searchBoxText} 
+                                        searchBoxChange={this.searchBoxChange} 
+                                    />
+                                </div>
+                            </div>
                             : null
                     }
-                    {
-                        this.state.playlistTabSelected && !this.state.showNewPlaylistPage && !this.state.showEditPlaylistPage ?
-                            <ShowAllPlaylistPage showNewPlaylistPage={this.state.showNewPlaylistPage} userAllPlaylists={this.state.userAllPlaylists}
-                                setShowNewPlaylistPageIndicator={this.setShowNewPlaylistPageIndicator} setShowEditPlaylistPageIndicator={this.setShowEditPlaylistPageIndicator} />
-                            : this.state.showNewPlaylistPage && !this.state.showEditPlaylistPage ?
-                                <NewPlaylistPage photosList={this.props.photosInfo.photosList} songList={this.props.songsInfo.songList} filteredSearchResult={this.state.filteredSearchResult}
-                                    showThumbnails={this.state.showThumbnails} newPlaylistInfo={this.state.newPlaylistInfo}
-                                    savePlaylistFromNewPage={this.savePlaylistFromNewPage} addSongToNewPlaylist={this.addSongToNewPlaylist} />
-                                : this.state.showEditPlaylistPage && !this.state.showNewPlaylistPage ?
-                                    <EditPlaylistPage photosList={this.props.photosInfo.photosList} songList={this.props.songsInfo.songList} filteredSearchResult={this.state.filteredSearchResult}
-                                        showThumbnails={this.state.showThumbnails} editPlaylistInfo={this.state.editPlaylistInfo}
-                                        savePlaylistFromEditPage={this.savePlaylistFromEditPage} removeSongFromEditPlaylist={this.removeSongFromEditPlaylist} 
-                                        shufflePlaylistSongs={this.shufflePlaylistSongs} addSongToEditPlaylist={this.addSongToEditPlaylist} />
-                                    : null
-                    }
-                </Row>
-                
-            </Container>
+                    
+                    <Row className="justify-content-md-center">
+                        {
+                            this.state.allSongsTabSelected ?
+                                <SongsListPanel photosList={this.props.photosInfo.photosList} songList={this.props.songsInfo.songList} filteredSearchResult={this.state.filteredSearchResult} 
+                                    showThumbnails={this.state.showThumbnails} searchBoxText={this.state.searchBoxText} />
+                                : null
+                        }
+                        {
+                            this.state.playlistTabSelected && !this.state.showNewPlaylistPage && !this.state.showEditPlaylistPage ?
+                                <ShowAllPlaylistPage showNewPlaylistPage={this.state.showNewPlaylistPage} userAllPlaylists={this.state.userAllPlaylists}
+                                    setShowNewPlaylistPageIndicator={this.setShowNewPlaylistPageIndicator} setShowEditPlaylistPageIndicator={this.setShowEditPlaylistPageIndicator} />
+                                : this.state.showNewPlaylistPage && !this.state.showEditPlaylistPage ?
+                                    <NewPlaylistPage photosList={this.props.photosInfo.photosList} songList={this.props.songsInfo.songList} filteredSearchResult={this.state.filteredSearchResult}
+                                        showThumbnails={this.state.showThumbnails} newPlaylistInfo={this.state.newPlaylistInfo}
+                                        savePlaylistFromNewPage={this.savePlaylistFromNewPage} addSongToNewPlaylist={this.addSongToNewPlaylist} />
+                                    : this.state.showEditPlaylistPage && !this.state.showNewPlaylistPage ?
+                                        <EditPlaylistPage photosList={this.props.photosInfo.photosList} songList={this.props.songsInfo.songList} filteredSearchResult={this.state.filteredSearchResult}
+                                            showThumbnails={this.state.showThumbnails} editPlaylistInfo={this.state.editPlaylistInfo}
+                                            savePlaylistFromEditPage={this.savePlaylistFromEditPage} removeSongFromEditPlaylist={this.removeSongFromEditPlaylist} 
+                                            shufflePlaylistSongs={this.shufflePlaylistSongs} addSongToEditPlaylist={this.addSongToEditPlaylist} />
+                                        : null
+                        }
+                    </Row>                    
+                </Container>
+            </div>
             );
         }
 }

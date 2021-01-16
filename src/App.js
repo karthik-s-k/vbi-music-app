@@ -1,16 +1,16 @@
-import React from 'react';
+import React from "react";
 import Dashboard from "./containers/Dashboard";
 
-import {Provider} from 'react-redux'
+import { Provider } from "react-redux";
 import store from "./store";
 
-function App(){
+function App() {
   return (
-      <Provider store={store}>
-          <div className="App">
-              <Dashboard />
-          </div>
-      </Provider>
+    <Provider store={store}>
+      <div className="App">
+        <Dashboard />
+      </div>
+    </Provider>
   );
 }
 
