@@ -6,6 +6,7 @@ This is an application built in ReactJs to show list of songs and allow users to
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 This project uses redux for state management(https://redux.js.org/).
-API are used from https://jsonplaceholder.typicode.com/
+This project uses css styles from React bootstrap (https://react-bootstrap.netlify.app/)
+API's used are from https://jsonplaceholder.typicode.com/
 
 
