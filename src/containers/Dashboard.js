@@ -126,7 +126,7 @@ class Dashboard extends React.Component {
     setShowEditPlaylistPageIndicator(selectedPlaylist) {
         this.setState({ 
             showEditPlaylistPage: true, showNewPlaylistPage: false, editPlaylistInfo: selectedPlaylist, 
-            searchBoxText: '', filteredSearchResult: []
+            searchBoxText: '', filteredSearchResult: [], showNewSongsInEditPlaylistPage: false 
         });
     }
     setShowNewSongsInEditPlaylistPageIndicator() {
