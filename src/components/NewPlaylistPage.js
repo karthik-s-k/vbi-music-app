@@ -1,4 +1,5 @@
 import React from "react";
+import SearchPanel from "../components/SearchPanel";
 import SongInfo from "./SongInfo";
 
 import ButtonGroup from "react-bootstrap/ButtonGroup";
@@ -14,12 +15,17 @@ class NewPlaylistPage extends React.Component {
         };
 
         this.onPlaylistNameChange = this.onPlaylistNameChange.bind(this);
+        this.searchBoxChange = this.searchBoxChange.bind(this);
     }
 
     componentDidMount() {
         if(this.props.newPlaylistInfo) {
             this.setState({ playlistName: this.props.newPlaylistInfo.playlistName })
         }
+    }
+
+    searchBoxChange(event) {
+        this.props.searchBoxChange(event.target.value);
     }
 
     onPlaylistNameChange(event) {
@@ -42,12 +48,13 @@ class NewPlaylistPage extends React.Component {
             playlistSongs = playlistInfo.songs;
         }
 
-        if(this.props.filteredSearchResult && this.props.filteredSearchResult.length < 1) {
-            songList = this.props.songList;
-        }
-        else if (this.props.filteredSearchResult && this.props.filteredSearchResult.length > 0) {
+        if(this.props.showFilteredResult && this.props.filteredSearchResult) {
             songList = this.props.filteredSearchResult;
         }
+        else {
+            songList = this.props.songList;
+        }
+        
         updatedSongsList = songList;
 
         playlistSongs.map((playlistSong, index) => {
@@ -64,28 +71,40 @@ class NewPlaylistPage extends React.Component {
                 <div className="row no-gutters mb-3">
                     <div className="col-sm-10 px-3">
                         <h3>                   
-                            <span>Playlist </span>         
                             <InputGroup className="mb-3">
+                                <InputGroup.Prepend>
+                                <InputGroup.Text id="playlist-name">
+                                    Playlist
+                                </InputGroup.Text>
+                                </InputGroup.Prepend>
                                 <FormControl
-                                    type="text"
-                                    className="form-control"
-                                    name="playlistName"
-                                    id="playlistName"
-                                    placeholder="Playlist name "
-                                    autoFocus=""
-                                    onChange={this.onPlaylistNameChange}
-                                    autoComplete="off"
-                                    value={this.state.playlistName}
-                                />
+                                            type="text"
+                                            className="form-control"
+                                            name="playlistName"
+                                            id="playlistName"
+                                            placeholder="playlist name "
+                                            autoFocus=""
+                                            onChange={this.onPlaylistNameChange}
+                                            autoComplete="off"
+                                            value={this.state.playlistName}
+                                        />
                             </InputGroup>
                         </h3>
                     </div>
                     <div className="col-sm-2">
                         <ButtonGroup aria-label="list type" className="d-flex">
-                            <Button variant="light" onClick={this.props.savePlaylistFromNewPage}>
+                            <Button variant="light" onClick={this.savePlaylistAction.bind(this, playlistInfo)}>
                                 Save playlist
                             </Button>
                         </ButtonGroup>
+                    </div>
+                </div>
+                <div className="col-sm-12  d-flex justify-content-center">
+                    <div className="col-sm-8">
+                        <SearchPanel 
+                            searchBoxText={this.props.searchBoxText} 
+                            searchBoxChange={this.searchBoxChange} 
+                        />
                     </div>
                 </div>
                 {

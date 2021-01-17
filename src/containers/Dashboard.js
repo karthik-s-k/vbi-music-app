@@ -7,7 +7,6 @@ import Jumbotron from "react-bootstrap/Jumbotron";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Header from "../components/Header";
-import SearchPanel from "../components/SearchPanel";
 import SongsListPanel from "../components/SongsListPanel";
 import ShowAllPlaylistPage from "../components/ShowAllPlaylistPage";
 import NewPlaylistPage from "../components/NewPlaylistPage";
@@ -24,8 +23,10 @@ class Dashboard extends React.Component {
             playlistTabSelected: false,
             showNewPlaylistPage: false,
             showEditPlaylistPage: false,
+            showNewSongsInEditPlaylistPage: false,
             showThumbnails: false,
             searchBoxText: '',
+            showFilteredResult: false,
             filteredSearchResult: [],
             newPlaylistInfo: {},
             editPlaylistInfo: {},
@@ -49,6 +50,9 @@ class Dashboard extends React.Component {
         this.removeSongFromEditPlaylist = this.removeSongFromEditPlaylist.bind(this);
         this.shufflePlaylistSongs = this.shufflePlaylistSongs.bind(this);
         this.addSongToEditPlaylist = this.addSongToEditPlaylist.bind(this);
+        this.setShowNewSongsInEditPlaylistPageIndicator = this.setShowNewSongsInEditPlaylistPageIndicator.bind(this);
+        this.disableShowNewSongsInEditPlaylistPageIndicator = this.disableShowNewSongsInEditPlaylistPageIndicator.bind(this);
+        this.deleteCurrentPlaylist = this.deleteCurrentPlaylist.bind(this);
     }
 
     componentDidMount() {
@@ -58,7 +62,8 @@ class Dashboard extends React.Component {
     allSongsTabSelect() {
         this.setState({ 
                 allSongsTabSelected: true, playlistTabSelected: false, showNewPlaylistPage: false, 
-                showEditPlaylistPage: false
+                showEditPlaylistPage: false, showNewSongsInEditPlaylistPage: false,
+                searchBoxText: '', filteredSearchResult: []
             }, this.fetchAllSongsList());
     }
     playlistTabSelect() {
@@ -67,8 +72,12 @@ class Dashboard extends React.Component {
             userPlaylists = JSON.parse(localStorage.getItem("userPlaylists"));
         }        
 
-        this.setState({ playlistTabSelected: true, allSongsTabSelected: false, showNewPlaylistPage: false,
-            showEditPlaylistPage: false, newPlaylistInfo: {}, editPlaylistInfo: {}, userAllPlaylists: userPlaylists });
+        this.setState({ 
+                playlistTabSelected: true, allSongsTabSelected: false, showNewPlaylistPage: false, 
+                showNewSongsInEditPlaylistPage: false, showEditPlaylistPage: false, 
+                searchBoxText: '', filteredSearchResult: [],
+                newPlaylistInfo: {}, editPlaylistInfo: {}, userAllPlaylists: userPlaylists 
+            });
     }
     toggleShowingThumnails() {
         this.setState({ showThumbnails: !this.state.showThumbnails });
@@ -82,15 +91,15 @@ class Dashboard extends React.Component {
         this.props.MusicActions.getAllPhotosList();
     }
 
-    searchBoxChange(event) {
-        this.setState({ searchBoxText: event.target.value }, this.fetchSongsByName(event.target.value));
+    searchBoxChange(text) {
+        this.setState({ searchBoxText: text }, this.fetchSongsByName(text));
     }
     fetchSongsByName(songName) {
         if(songName === "") {
-            this.setState({ filteredSearchResult: [] });
+            this.setState({ filteredSearchResult: [], showFilteredResult: false });
         }
         else {
-            this.setState({ filteredSearchResult: this.props.songsInfo.songList.filter(song => song.title.includes(songName)) });
+            this.setState({ filteredSearchResult: this.props.songsInfo.songList.filter(song => song.title.includes(songName)), showFilteredResult: true });
         }        
     }
 
@@ -109,10 +118,22 @@ class Dashboard extends React.Component {
             "songs": []
           };
 
-        this.setState({ showNewPlaylistPage: true, showEditPlaylistPage: false, newPlaylistInfo: playlistInfo });
+        this.setState({ 
+            showNewPlaylistPage: true, showEditPlaylistPage: false, newPlaylistInfo: playlistInfo,
+            searchBoxText: '', filteredSearchResult: []
+        });
     }
     setShowEditPlaylistPageIndicator(selectedPlaylist) {
-        this.setState({ showEditPlaylistPage: true, showNewPlaylistPage: false, editPlaylistInfo: selectedPlaylist });
+        this.setState({ 
+            showEditPlaylistPage: true, showNewPlaylistPage: false, editPlaylistInfo: selectedPlaylist, 
+            searchBoxText: '', filteredSearchResult: []
+        });
+    }
+    setShowNewSongsInEditPlaylistPageIndicator() {
+        this.setState({ showNewSongsInEditPlaylistPage: true });
+    }
+    disableShowNewSongsInEditPlaylistPageIndicator() {
+        this.setState({ showNewSongsInEditPlaylistPage: false });
     }
 
     savePlaylistFromNewPage(playlistInfo) {
@@ -271,6 +292,23 @@ class Dashboard extends React.Component {
         this.setState({ editPlaylistInfo: editPlaylistToBeSaved });
     }
 
+    deleteCurrentPlaylist(playlistInfo) {
+        let userPlaylists = [];
+        let playlistIndex = 0;
+
+        if(localStorage.getItem("userPlaylists")) {
+            userPlaylists = JSON.parse(localStorage.getItem("userPlaylists"));
+            localStorage.removeItem("userPlaylists");   
+            
+            playlistIndex = userPlaylists.findIndex(playlist => playlist.playlistId === playlistInfo.playlistId);
+            userPlaylists.splice(playlistIndex, 1);
+
+            localStorage.setItem("userPlaylists", JSON.stringify(userPlaylists));
+        }
+
+        this.playlistTabSelect();
+    }
+
     render() {
         return (
             <div>
@@ -284,44 +322,33 @@ class Dashboard extends React.Component {
                     <Row className="justify-content-md-center">
                         <Header 
                             allSongsTabSelected={this.state.allSongsTabSelected} playlistTabSelected={this.state.playlistTabSelected} showThumbnails={this.state.showThumbnails}
-                            allSongsTabSelected={this.state.allSongsTabSelected} showNewPlaylistPage={this.state.showNewPlaylistPage} showEditPlaylistPage={this.state.showEditPlaylistPage}
+                            showNewPlaylistPage={this.state.showNewPlaylistPage} showEditPlaylistPage={this.state.showEditPlaylistPage}
                             allSongsTabSelect={this.allSongsTabSelect} playlistTabSelect={this.playlistTabSelect} toggleShowingThumnails={this.toggleShowingThumnails}
                             />
-                    </Row>
-                    
-                    {
-                        (this.state.allSongsTabSelected || (this.state.showNewPlaylistPage || this.state.showEditPlaylistPage)) ?
-                            <div className="col-sm-12  d-flex justify-content-center">
-                                <div className="col-sm-8">
-                                    <SearchPanel 
-                                        searchBoxText={this.state.searchBoxText} 
-                                        searchBoxChange={this.searchBoxChange} 
-                                    />
-                                </div>
-                            </div>
-                            : null
-                    }
-                    
+                    </Row>   
                     <Row className="justify-content-md-center">
                         {
                             this.state.allSongsTabSelected ?
                                 <SongsListPanel photosList={this.props.photosInfo.photosList} songList={this.props.songsInfo.songList} filteredSearchResult={this.state.filteredSearchResult} 
-                                    showThumbnails={this.state.showThumbnails} searchBoxText={this.state.searchBoxText} />
+                                    showThumbnails={this.state.showThumbnails} searchBoxText={this.state.searchBoxText} showFilteredResult={this.state.showFilteredResult}
+                                    searchBoxChange={this.searchBoxChange} />
                                 : null
                         }
                         {
                             this.state.playlistTabSelected && !this.state.showNewPlaylistPage && !this.state.showEditPlaylistPage ?
-                                <ShowAllPlaylistPage showNewPlaylistPage={this.state.showNewPlaylistPage} userAllPlaylists={this.state.userAllPlaylists}
-                                    setShowNewPlaylistPageIndicator={this.setShowNewPlaylistPageIndicator} setShowEditPlaylistPageIndicator={this.setShowEditPlaylistPageIndicator} />
+                                <ShowAllPlaylistPage showNewPlaylistPage={this.state.showNewPlaylistPage} userAllPlaylists={this.state.userAllPlaylists} showFilteredResult={this.state.showFilteredResult}
+                                    setShowNewPlaylistPageIndicator={this.setShowNewPlaylistPageIndicator} setShowEditPlaylistPageIndicator={this.setShowEditPlaylistPageIndicator} 
+                                    deleteCurrentPlaylist={this.deleteCurrentPlaylist} />
                                 : this.state.showNewPlaylistPage && !this.state.showEditPlaylistPage ?
                                     <NewPlaylistPage photosList={this.props.photosInfo.photosList} songList={this.props.songsInfo.songList} filteredSearchResult={this.state.filteredSearchResult}
-                                        showThumbnails={this.state.showThumbnails} newPlaylistInfo={this.state.newPlaylistInfo}
-                                        savePlaylistFromNewPage={this.savePlaylistFromNewPage} addSongToNewPlaylist={this.addSongToNewPlaylist} />
+                                        showThumbnails={this.state.showThumbnails} newPlaylistInfo={this.state.newPlaylistInfo} searchBoxText={this.state.searchBoxText} showFilteredResult={this.state.showFilteredResult}
+                                        savePlaylistFromNewPage={this.savePlaylistFromNewPage} addSongToNewPlaylist={this.addSongToNewPlaylist} searchBoxChange={this.searchBoxChange} />
                                     : this.state.showEditPlaylistPage && !this.state.showNewPlaylistPage ?
-                                        <EditPlaylistPage photosList={this.props.photosInfo.photosList} songList={this.props.songsInfo.songList} filteredSearchResult={this.state.filteredSearchResult}
-                                            showThumbnails={this.state.showThumbnails} editPlaylistInfo={this.state.editPlaylistInfo}
-                                            savePlaylistFromEditPage={this.savePlaylistFromEditPage} removeSongFromEditPlaylist={this.removeSongFromEditPlaylist} 
-                                            shufflePlaylistSongs={this.shufflePlaylistSongs} addSongToEditPlaylist={this.addSongToEditPlaylist} />
+                                        <EditPlaylistPage photosList={this.props.photosInfo.photosList} songList={this.props.songsInfo.songList} filteredSearchResult={this.state.filteredSearchResult} searchBoxText={this.state.searchBoxText}
+                                            showThumbnails={this.state.showThumbnails} editPlaylistInfo={this.state.editPlaylistInfo} showNewSongsInEditPlaylistPage={this.state.showNewSongsInEditPlaylistPage} showFilteredResult={this.state.showFilteredResult}
+                                            savePlaylistFromEditPage={this.savePlaylistFromEditPage} removeSongFromEditPlaylist={this.removeSongFromEditPlaylist}  searchBoxChange={this.searchBoxChange}
+                                            shufflePlaylistSongs={this.shufflePlaylistSongs} addSongToEditPlaylist={this.addSongToEditPlaylist} 
+                                            setShowNewSongsInEditPlaylistPageIndicator={this.setShowNewSongsInEditPlaylistPageIndicator} disableShowNewSongsInEditPlaylistPageIndicator={this.disableShowNewSongsInEditPlaylistPageIndicator} />
                                         : null
                         }
                     </Row>                    

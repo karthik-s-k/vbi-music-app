@@ -29,6 +29,11 @@ class SongInfo extends React.Component {
             "userId": ""
         };
 
+        let bgColor = "white";
+        if (this.props.bgColor) {
+            bgColor = this.props.bgColor;
+        }
+
         if (this.props.isEditPlaylist && this.props.showAddSongInPlaylist === false) {
             songDetails.songId = this.props.song.songId;
             songDetails.albumId = this.props.song.albumId;
@@ -55,53 +60,56 @@ class SongInfo extends React.Component {
                 {
                     this.props.showThumbnails ?
                      (
+                        
                         <div className="card mb-4">
-                            <div className="row no-gutters">
-                                <div className="col-md-2">
-                                    <img src={songDetails.thumbURL} className="card-img" alt="album art" />
-                                </div>
-                                <div className="col-md-6 pt-md-3 pt-sm-1">
-                                    <div className="card-body">
-                                        <h4 className="card-title">
-                                            <span>Title : </span> {songDetails.songTitle}
-                                        </h4>
-                                        <h6 className="card-subtitle text-muted">
-                                            <span>Album : </span>
-                                            {songDetails.albumTitle}
-                                        </h6>
-                                        <p className="card-text">Singers : Undefined</p>
+                            <div style={{backgroundColor: bgColor}}>
+                                <div className="row no-gutters">
+                                    <div className="col-md-2">
+                                        <img src={songDetails.thumbURL} className="card-img" alt="album art" />
                                     </div>
-                                </div>
-                                <div className="col-md-4 px-auto pt-md-5 pt-sm-1 mb-2">
-                                    <div className="row no-gutters">
-                                        <div className="col d-flex justify-content-center">
-                                            <span>Play time : Undefined</span>
+                                    <div className="col-md-6 pt-md-3 pt-sm-1">
+                                        <div className="card-body">
+                                            <h4 className="card-title">
+                                                <span>Title : </span> {songDetails.songTitle}
+                                            </h4>
+                                            <h6 className="card-subtitle text-muted">
+                                                <span>Album : </span>
+                                                {songDetails.albumTitle}
+                                            </h6>
+                                            <p className="card-text">Singers : Undefined</p>
                                         </div>
-                                        <div className="col d-flex justify-content-center">
-                                            {
-                                                this.props.showDeleteSongInPlaylist ? (
-                                                    <ButtonGroup aria-label="list type">
-                                                        <Button variant="light" onClick={this.removeSongFromPlaylist.bind(this, songDetails)}>
-                                                            <i class="fas fa-minus-circle"></i> Remove
-                                                        </Button>                    
-                                                    </ButtonGroup> 
-                                                    ) : null
-                                            }
-                                            {
-                                                this.props.showAddSongInPlaylist ? (
-                                                    <ButtonGroup aria-label="list type">
-                                                    {
-                                                        this.props.isEditPlaylist ?
-                                                            <Button variant="light" onClick={this.addSongToEditPlaylist.bind(this, songDetails)}>
-                                                                <i class="fas fa-plus"></i> Add to list
+                                    </div>
+                                    <div className="col-md-4 px-auto pt-md-5 pt-sm-1 mb-2">
+                                        <div className="row no-gutters">
+                                            <div className="col d-flex justify-content-center">
+                                                <span>Play time : Undefined</span>
+                                            </div>
+                                            <div className="col d-flex justify-content-center">
+                                                {
+                                                    this.props.showDeleteSongInPlaylist ? (
+                                                        <ButtonGroup aria-label="list type">
+                                                            <Button variant="light" onClick={this.removeSongFromPlaylist.bind(this, songDetails)}>
+                                                                <i class="fas fa-minus-circle"></i> Remove
                                                             </Button>                    
-                                                            :   <Button variant="light" onClick={this.addSongToPlaylist.bind(this, songDetails)}>
+                                                        </ButtonGroup> 
+                                                        ) : null
+                                                }
+                                                {
+                                                    this.props.showAddSongInPlaylist ? (
+                                                        <ButtonGroup aria-label="list type">
+                                                        {
+                                                            this.props.isEditPlaylist ?
+                                                                <Button variant="light" onClick={this.addSongToEditPlaylist.bind(this, songDetails)}>
                                                                     <i class="fas fa-plus"></i> Add to list
-                                                                </Button> 
-                                                    }
-                                                    </ButtonGroup>
-                                                    ) : null
-                                            }
+                                                                </Button>                    
+                                                                :   <Button variant="light" onClick={this.addSongToPlaylist.bind(this, songDetails)}>
+                                                                        <i class="fas fa-plus"></i> Add to list
+                                                                    </Button> 
+                                                        }
+                                                        </ButtonGroup>
+                                                        ) : null
+                                                }
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -110,50 +118,53 @@ class SongInfo extends React.Component {
                      )
                      :
                      (
+                        
                         <div className="card mb-4">
-                            <div className="row no-gutters">
-                                <div className="col-md-8 mt-">
-                                    <div className="card-body">
-                                        <h4 className="card-title">
-                                            <span>Title : </span> {songDetails.songTitle}
-                                        </h4>
-                                        <h6 className="card-subtitle text-muted">
-                                            <span>Album : </span>
-                                            {songDetails.albumTitle}
-                                        </h6>
-                                        <p className="card-text">Singers : Undefined</p>
-                                    </div>
-                                </div>
-                                <div className="col-md-4 px-auto pt-md-5 pt-sm-1 mb-2">
-                                    <div className="row no-gutters">
-                                        <div className="col  d-flex justify-content-center">
-                                            <span>Play time : Undefined</span>
+                            <div style={{backgroundColor: bgColor}}>
+                                <div className="row no-gutters">
+                                    <div className="col-md-8 mt-">
+                                        <div className="card-body">
+                                            <h4 className="card-title">
+                                                <span>Title : </span> {songDetails.songTitle}
+                                            </h4>
+                                            <h6 className="card-subtitle text-muted">
+                                                <span>Album : </span>
+                                                {songDetails.albumTitle}
+                                            </h6>
+                                            <p className="card-text">Singers : Undefined</p>
                                         </div>
-                                        <div className="col  d-flex justify-content-center">
-                                            {
-                                                this.props.showDeleteSongInPlaylist ? (
-                                                    <ButtonGroup aria-label="list type">
-                                                        <Button variant="light" onClick={this.removeSongFromPlaylist.bind(this, songDetails)}>
-                                                            <i class="fas fa-minus-circle"></i> Remove
-                                                        </Button>                    
-                                                    </ButtonGroup>
-                                                    ) : null
-                                            }
-                                            {
-                                                this.props.showAddSongInPlaylist ? (
-                                                    <ButtonGroup aria-label="list type">
-                                                    {
-                                                        this.props.isEditPlaylist ?
-                                                            <Button variant="light" onClick={this.addSongToEditPlaylist.bind(this, songDetails)}>
-                                                                <i class="fas fa-plus"></i> Add to list
+                                    </div>
+                                    <div className="col-md-4 px-auto pt-md-5 pt-sm-1 mb-2">
+                                        <div className="row no-gutters">
+                                            <div className="col  d-flex justify-content-center">
+                                                <span>Play time : Undefined</span>
+                                            </div>
+                                            <div className="col  d-flex justify-content-center">
+                                                {
+                                                    this.props.showDeleteSongInPlaylist ? (
+                                                        <ButtonGroup aria-label="list type">
+                                                            <Button variant="light" onClick={this.removeSongFromPlaylist.bind(this, songDetails)}>
+                                                                <i class="fas fa-minus-circle"></i> Remove
                                                             </Button>                    
-                                                            :   <Button variant="light" onClick={this.addSongToPlaylist.bind(this, songDetails)}>
+                                                        </ButtonGroup>
+                                                        ) : null
+                                                }
+                                                {
+                                                    this.props.showAddSongInPlaylist ? (
+                                                        <ButtonGroup aria-label="list type">
+                                                        {
+                                                            this.props.isEditPlaylist ?
+                                                                <Button variant="light" onClick={this.addSongToEditPlaylist.bind(this, songDetails)}>
                                                                     <i class="fas fa-plus"></i> Add to list
-                                                                </Button> 
-                                                    }
-                                                    </ButtonGroup>
-                                                    ) : null
-                                            }
+                                                                </Button>                    
+                                                                :   <Button variant="light" onClick={this.addSongToPlaylist.bind(this, songDetails)}>
+                                                                        <i class="fas fa-plus"></i> Add to list
+                                                                    </Button> 
+                                                        }
+                                                        </ButtonGroup>
+                                                        ) : null
+                                                }
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

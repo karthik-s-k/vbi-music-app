@@ -12,7 +12,7 @@ class SearchPanel extends React.Component {
             type="text"
             className="form-control"
             name="searchBox"
-            placeholder="Search by song title... "
+            placeholder="Search by song title "
             id="searchBox"
             autoFocus=""
             onChange={this.props.searchBoxChange}

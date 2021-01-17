@@ -1,10 +1,10 @@
 .jumbotron {
   background-image: url("https://source.unsplash.com/YrtFlrLo2DQ/1200x700");
   background-color: #cccccc; /* Used if the image is unavailable */
-  height: 200px; /* You must set a specified height */
-  background-position: center; /* Center the image */
-  background-repeat: no-repeat; /* Do not repeat the image */
-  background-size: cover; /* Resize the background image to cover the entire container */
+  height: 200px;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
   color: white;
 }
 .btn {
@@ -13,7 +13,7 @@
   height: 40px;
   background-color: #9980fa !important;
 }
-.btn-success {
+.btn-primary {
   background-color: #5f27cd !important;
 }
 .btn-light {

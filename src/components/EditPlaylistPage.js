@@ -1,4 +1,5 @@
 import React from "react";
+import SearchPanel from "../components/SearchPanel";
 import SongInfo from "./SongInfo";
 
 import ButtonGroup from "react-bootstrap/ButtonGroup";
@@ -10,21 +11,25 @@ class EditPlaylistPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            playlistName: '',
-            showNewSongsList: false
+            playlistName: ''
         };
 
         this.onPlaylistNameChange = this.onPlaylistNameChange.bind(this);
         this.showNewSongsToAdd = this.showNewSongsToAdd.bind(this);
+        this.searchBoxChange = this.searchBoxChange.bind(this);
     }
 
     componentDidMount() {
         if(this.props.editPlaylistInfo) {
-            this.setState({ showNewSongsList: false, playlistName: this.props.editPlaylistInfo.playlistName })
+            this.setState({ playlistName: this.props.editPlaylistInfo.playlistName });
         }
         else {
-            this.setState({ showNewSongsList: false });
+            this.props.disableShowNewSongsInEditPlaylistPageIndicator();
         }
+    }
+
+    searchBoxChange(event) {
+        this.props.searchBoxChange(event.target.value);
     }
 
     onPlaylistNameChange(event) {
@@ -41,7 +46,7 @@ class EditPlaylistPage extends React.Component {
     }
 
     showNewSongsToAdd() {
-        this.setState({ showNewSongsList: true });
+        this.props.setShowNewSongsInEditPlaylistPageIndicator();
     }
 
     render() {
@@ -50,12 +55,12 @@ class EditPlaylistPage extends React.Component {
         let newSongsList = [];
         let updatedNewSongsList = [];
 
-        if (this.state.showNewSongsList) {
-            if(this.props.filteredSearchResult && this.props.filteredSearchResult.length < 1) {
-                newSongsList = this.props.songList;
-            }
-            else if (this.props.filteredSearchResult && this.props.filteredSearchResult.length > 0) {
+        if (this.props.showNewSongsInEditPlaylistPage) {
+            if(this.props.showFilteredResult && this.props.filteredSearchResult) {
                 newSongsList = this.props.filteredSearchResult;
+            }
+            else {
+                newSongsList = this.props.songList;
             }
             updatedNewSongsList = newSongsList;
 
@@ -73,19 +78,24 @@ class EditPlaylistPage extends React.Component {
             <div className="container">
                 <div className="row no-gutters mb-3">
                     <div className="col-sm-6 px-3">
-                        <h3>                            
-                            <span>Playlist </span>
+                        <h3>                   
                             <InputGroup className="mb-3">
+                                <InputGroup.Prepend>
+                                <InputGroup.Text id="playlist-name">
+                                    Playlist
+                                </InputGroup.Text>
+                                </InputGroup.Prepend>
                                 <FormControl
-                                    type="text"
-                                    className="form-control"
-                                    name="playlistName"
-                                    id="playlistName"
-                                    autoFocus=""
-                                    onChange={this.onPlaylistNameChange}
-                                    autoComplete="off"
-                                    value={this.state.playlistName}
-                                />
+                                            type="text"
+                                            className="form-control"
+                                            name="playlistName"
+                                            id="playlistName"
+                                            placeholder="playlist name "
+                                            autoFocus=""
+                                            onChange={this.onPlaylistNameChange}
+                                            autoComplete="off"
+                                            value={this.state.playlistName}
+                                        />
                             </InputGroup>
                         </h3>
                     </div>
@@ -103,11 +113,23 @@ class EditPlaylistPage extends React.Component {
                         </ButtonGroup>
                     </div>
                 </div>
+                {
+                    this.props.showNewSongsInEditPlaylistPage ?
+                        <div className="col-sm-12  d-flex justify-content-center">
+                            <div className="col-sm-8">
+                                <SearchPanel 
+                                    searchBoxText={this.props.searchBoxText} 
+                                    searchBoxChange={this.searchBoxChange} 
+                                />
+                            </div>
+                        </div>
+                        : null 
+                }
             
                 {
-                    this.state.showNewSongsList && newSongsList && newSongsList.map((newSong, index) => {
+                    this.props.showNewSongsInEditPlaylistPage && newSongsList && newSongsList.map((newSong, index) => {
                         return (
-                            <SongInfo key={index} song={newSong} photosList={this.props.photosList} showThumbnails={this.props.showThumbnails} 
+                            <SongInfo key={index} song={newSong} photosList={this.props.photosList} showThumbnails={this.props.showThumbnails} bgColor={"white"}
                                 showAddSongInPlaylist={true} isEditPlaylist={true} showNewSongsList={true} addSongToEditPlaylist={this.props.addSongToEditPlaylist} />
                             );
                     })
@@ -116,7 +138,7 @@ class EditPlaylistPage extends React.Component {
                 {
                     songList && songList.map((song, index) => {                  
                         return (
-                            <SongInfo key={index} song={song} showThumbnails={this.props.showThumbnails} 
+                            <SongInfo key={index} song={song} showThumbnails={this.props.showThumbnails} bgColor={"lavender"}
                                 showDeleteSongInPlaylist={true} showAddSongInPlaylist={false} isEditPlaylist={true}  
                                 removeSongFromEditPlaylist={this.props.removeSongFromEditPlaylist} />
                             );
