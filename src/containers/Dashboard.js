@@ -99,6 +99,7 @@ class Dashboard extends React.Component {
             this.setState({ filteredSearchResult: [], showFilteredResult: false });
         }
         else {            
+            songName = songName.toLowerCase();
             let filteredResult = this.props.songsInfo.songList.filter(song => song.title.includes(songName));
 
             this.setState({ filteredSearchResult: filteredResult, showFilteredResult: true });
