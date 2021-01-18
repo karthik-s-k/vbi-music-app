@@ -54,6 +54,8 @@ class EditPlaylistPage extends React.Component {
         let songList = editPlayList.songs;
         let newSongsList = [];
         let updatedNewSongsList = [];
+        let searchResultCount = 0;
+        let searchResultText = "";
 
         if (this.props.showNewSongsInEditPlaylistPage) {
             if(this.props.showFilteredResult && this.props.filteredSearchResult) {
@@ -64,14 +66,26 @@ class EditPlaylistPage extends React.Component {
             }
             updatedNewSongsList = newSongsList;
 
-            newSongsList.map((newSong, index) => {
-                let songExists = songList.some(song => song.songId === newSong.id);
-                if(songExists) {
-                    updatedNewSongsList.splice(index, 1);
-                }
-            });
+            if (newSongsList && newSongsList.length > 0) {
+                newSongsList.map((newSong, index) => {
+                    if (songList.some(song =>  song.songId === newSong.id)) {
+                        updatedNewSongsList.splice(index, 1);
+                    }
+                })
+            }
 
-            newSongsList = updatedNewSongsList;
+            newSongsList = updatedNewSongsList;            
+            searchResultCount = newSongsList.length;
+
+            if (searchResultCount === 0) {
+                searchResultText = "No records found";
+            }
+            else if (searchResultCount === 1) {
+                searchResultText = "Found 1 record";
+            }
+            else {
+                searchResultText = "Showing " + searchResultCount + " records";
+            }
         }
 
         return (
@@ -121,6 +135,13 @@ class EditPlaylistPage extends React.Component {
                                     searchBoxText={this.props.searchBoxText} 
                                     searchBoxChange={this.searchBoxChange} 
                                 />
+                                {
+                                    (this.props.showFilteredResult && this.props.filteredSearchResult) ?
+                                        <div style={{float: "right", paddingBottom: "1%"}}>
+                                            { searchResultText }
+                                        </div>
+                                        : null
+                                }    
                             </div>
                         </div>
                         : null 

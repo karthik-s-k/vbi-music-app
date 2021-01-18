@@ -131,13 +131,13 @@ class SongInfo extends React.Component {
                                                 <span>Album : </span>
                                                 {songDetails.albumTitle}
                                             </h6>
-                                            <p className="card-text">Singers : Undefined</p>
+                                            <p className="card-text">Singers : N/A</p>
                                         </div>
                                     </div>
                                     <div className="col-md-4 px-auto pt-md-5 pt-sm-1 mb-2">
                                         <div className="row no-gutters">
                                             <div className="col  d-flex justify-content-center">
-                                                <span>Play time : Undefined</span>
+                                                <span>Play time : N/A</span>
                                             </div>
                                             <div className="col  d-flex justify-content-center">
                                                 {

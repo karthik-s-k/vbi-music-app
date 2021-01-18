@@ -16,12 +16,28 @@ class SongsListPanel extends React.Component {
 
     render() {
         let songList = [];
+        let searchResultCount = 0;
+        let searchResultText = "";
 
         if(this.props.showFilteredResult && this.props.filteredSearchResult) {
             songList = this.props.filteredSearchResult;
         }
         else {
             songList = this.props.songList;
+        }
+        
+        if(songList) {
+            searchResultCount = songList.length;
+        }
+
+        if (searchResultCount === 0) {
+            searchResultText = "No records found";
+        }
+        else if (searchResultCount === 1) {
+            searchResultText = "Found 1 record";
+        }
+        else {
+            searchResultText = "Showing " + searchResultCount + " records";
         }
 
         return (
@@ -32,6 +48,14 @@ class SongsListPanel extends React.Component {
                             searchBoxText={this.props.searchBoxText} 
                             searchBoxChange={this.searchBoxChange} 
                         />
+                        
+                        {
+                            (this.props.showFilteredResult && this.props.filteredSearchResult) ?
+                                <div style={{float: "right", paddingBottom: "1%"}}>
+                                    { searchResultText }
+                                </div>
+                                : null
+                        }                        
                     </div>
                 </div>
                 {

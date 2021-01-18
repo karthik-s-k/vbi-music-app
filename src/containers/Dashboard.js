@@ -62,7 +62,7 @@ class Dashboard extends React.Component {
     allSongsTabSelect() {
         this.setState({ 
                 allSongsTabSelected: true, playlistTabSelected: false, showNewPlaylistPage: false, 
-                showEditPlaylistPage: false, showNewSongsInEditPlaylistPage: false,
+                showEditPlaylistPage: false, showNewSongsInEditPlaylistPage: false, showFilteredResult: false,
                 searchBoxText: '', filteredSearchResult: []
             }, this.fetchAllSongsList());
     }
@@ -74,7 +74,7 @@ class Dashboard extends React.Component {
 
         this.setState({ 
                 playlistTabSelected: true, allSongsTabSelected: false, showNewPlaylistPage: false, 
-                showNewSongsInEditPlaylistPage: false, showEditPlaylistPage: false, 
+                showNewSongsInEditPlaylistPage: false, showEditPlaylistPage: false, showFilteredResult: false,
                 searchBoxText: '', filteredSearchResult: [],
                 newPlaylistInfo: {}, editPlaylistInfo: {}, userAllPlaylists: userPlaylists 
             });
@@ -98,8 +98,10 @@ class Dashboard extends React.Component {
         if(songName === "") {
             this.setState({ filteredSearchResult: [], showFilteredResult: false });
         }
-        else {
-            this.setState({ filteredSearchResult: this.props.songsInfo.songList.filter(song => song.title.includes(songName)), showFilteredResult: true });
+        else {            
+            let filteredResult = this.props.songsInfo.songList.filter(song => song.title.includes(songName));
+
+            this.setState({ filteredSearchResult: filteredResult, showFilteredResult: true });
         }        
     }
 
@@ -150,7 +152,9 @@ class Dashboard extends React.Component {
         userPlaylists.push(savePlaylistData);            
         localStorage.setItem("userPlaylists", JSON.stringify(userPlaylists));
 
-        this.setState({ showNewPlaylistPage: false, showEditPlaylistPage: false, userAllPlaylists: userPlaylists, newPlaylistInfo: {} });
+        this.setState({ showNewPlaylistPage: false, showEditPlaylistPage: false, showFilteredResult: false,
+            userAllPlaylists: userPlaylists, newPlaylistInfo: {} 
+        });
     }
     savePlaylistFromEditPage(playlistInfo) {
         let userPlaylists = [];
@@ -170,7 +174,9 @@ class Dashboard extends React.Component {
         userPlaylists.push(savePlaylistData);            
         localStorage.setItem("userPlaylists", JSON.stringify(userPlaylists));
 
-        this.setState({ showNewPlaylistPage: false, showEditPlaylistPage: false, userAllPlaylists: userPlaylists, editPlaylistInfo: {} });
+        this.setState({ showNewPlaylistPage: false, showEditPlaylistPage: false, showFilteredResult: false,
+            userAllPlaylists: userPlaylists, editPlaylistInfo: {} 
+        });
     }
 
     addSongToNewPlaylist(songInfo) {

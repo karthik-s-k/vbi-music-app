@@ -42,6 +42,8 @@ class NewPlaylistPage extends React.Component {
         let updatedSongsList = [];
         let playlistSongs = [];
         let playlistInfo = {};
+        let searchResultCount = 0;
+        let searchResultText = "";
         
         if(this.props.newPlaylistInfo) {
             playlistInfo = this.props.newPlaylistInfo;
@@ -57,14 +59,26 @@ class NewPlaylistPage extends React.Component {
         
         updatedSongsList = songList;
 
-        playlistSongs.map((playlistSong, index) => {
-            let songExists = songList.some(song => song.id === playlistSong.songId);
-            if(songExists) {
-                updatedSongsList.splice(index, 1);
-            }
-        });
+        if (playlistSongs && playlistSongs.length > 0) {
+            songList.map((song, index) => {
+                if (playlistSongs.some(playlistSong =>  playlistSong.songId === song.id)) {
+                    updatedSongsList.splice(index, 1);
+                }
+            })
+        }
 
-        songList = updatedSongsList;
+        songList = updatedSongsList;        
+        searchResultCount = songList.length;
+
+        if (searchResultCount === 0) {
+            searchResultText = "No records found";
+        }
+        else if (searchResultCount === 1) {
+            searchResultText = "Found 1 record";
+        }
+        else {
+            searchResultText = "Showing " + searchResultCount + " records";
+        }
 
         return (
             <div className="container">
@@ -105,6 +119,13 @@ class NewPlaylistPage extends React.Component {
                             searchBoxText={this.props.searchBoxText} 
                             searchBoxChange={this.searchBoxChange} 
                         />
+                        {
+                            (this.props.showFilteredResult && this.props.filteredSearchResult) ?
+                                <div style={{float: "right", paddingBottom: "1%"}}>
+                                    { searchResultText }
+                                </div>
+                                : null
+                        }    
                     </div>
                 </div>
                 {

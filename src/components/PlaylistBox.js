@@ -16,7 +16,7 @@ class PlaylistBox extends React.Component {
         let playlist = this.props.playlist;
         return (
             <Container>                
-                <div className="card mb-4">
+                <div className="card mb-4" style={{cursor:"pointer"}}>
                     <div className="row no-gutters" style={{paddingBottom: "2%"}}>
                         <div className="col-md-12 mt-">
                             <div className="card-body">
